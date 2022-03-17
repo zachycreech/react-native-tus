@@ -1,29 +1,27 @@
 //
-//  RNTus.swift
-//  RnTus
+//  TUSClient.swift
+//  
 //
-//  Created by Zachary Wheeler on 3/16/22.
-//  Copyright © 2022 Facebook. All rights reserved.
+//  Created by Tjeerd in ‘t Veen on 13/09/2021.
 //
-
 
 import Foundation
 import BackgroundTasks
 #if os(iOS)
 import MobileCoreServices
 #endif
-@objc(TUSClientDelegate)
+
 /// Implement this delegate to receive updates from the TUSClient
 public protocol TUSClientDelegate: AnyObject {
     /// TUSClient is starting an upload
-    @objc func didStartUpload(id: UUID, context: [String: String]?, client: TUSClient)
+    func didStartUpload(id: UUID, context: [String: String]?, client: TUSClient)
     /// `TUSClient` just finished an upload, returns the URL of the uploaded file.
-    @objc func didFinishUpload(id: UUID, url: URL, context: [String: String]?, client: TUSClient)
+    func didFinishUpload(id: UUID, url: URL, context: [String: String]?, client: TUSClient)
     /// An upload failed. Returns an error. Could either be a TUSClientError or a networking related error.
-    @objc func uploadFailed(id: UUID, error: Error, context: [String: String]?, client: TUSClient)
+    func uploadFailed(id: UUID, error: Error, context: [String: String]?, client: TUSClient)
     
     /// Receive an error related to files. E.g. The `TUSClient` couldn't store a file or remove a file.
-    @objc func fileError(error: TUSClientError, client: TUSClient)
+    func fileError(error: TUSClientError, client: TUSClient)
     
     /// Get the progress of all ongoing uploads combined
     ///
@@ -31,11 +29,11 @@ public protocol TUSClientDelegate: AnyObject {
     ///
     /// As a rule of thumb: The total will be highest on the start, a good starting point is to compare the progress against that number.
     @available(iOS 11.0, macOS 10.13, *)
-    @objc func totalProgress(bytesUploaded: Int, totalBytes: Int, client: TUSClient)
+    func totalProgress(bytesUploaded: Int, totalBytes: Int, client: TUSClient)
     
     @available(iOS 11.0, macOS 10.13, *)
     /// Get the progress of a specific upload by id. The id is given when adding an upload and methods of this delegate.
-    @objc func progressFor(id: UUID, context: [String: String]?, bytesUploaded: Int, totalBytes: Int, client: TUSClient)
+    func progressFor(id: UUID, context: [String: String]?, bytesUploaded: Int, totalBytes: Int, client: TUSClient)
 }
 
 public extension TUSClientDelegate {
