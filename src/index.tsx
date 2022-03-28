@@ -58,7 +58,7 @@ export class Upload {
     (this.uploadId
       ? Promise.resolve()
       : this.createUpload())
-    .then(() => this.resume())
+    // .then(() => this.resume())
     .catch((err) => console.log(err));
   }
 

@@ -15,16 +15,16 @@ class TusNative: NSObject {
     // tusClient.delegate = self
   // }
 
-  @objc(createUpload:options:resolve:reject:)
-  func createUpload(fileUrl: String, options: [String:Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    @objc(createUpload:options:resolver:rejecter:)
+    func createUpload(fileUrl: String, options: [String : Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
     let endpoint: String = options["endpoint"]! as? String ?? ""
     let headers = options["headers"]! as? [String: Any] ?? [:]
     let metadata = options["metadata"]! as? [String: Any] ?? [:]
 
-    resolve( "Dummy response: Starting upload with endpoint: \(endpoint) and Headers: \(headers) and metadata: \(metadata)" )
+    resolve( "Dummy response: Starting upload with endpoint: \(endpoint) headers: \(headers) metadata: \(metadata)" )
   }
 
-  @objc(resume:resolve:reject:)
+  @objc(resume:resolver:rejecter:)
   func resume(uploadId: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
     resolve( "Dummy response: Resumed uploadId: \(uploadId)" )
   }

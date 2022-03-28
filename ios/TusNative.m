@@ -3,7 +3,7 @@
 @interface RCT_EXTERN_MODULE(TusNative, NSObject)
 
 RCT_EXTERN_METHOD(createUpload:(NSString *)fileUrl
-                  options:(NSDictionary<NSString *, *>)options
+                  options:(NSDictionary *)options
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 

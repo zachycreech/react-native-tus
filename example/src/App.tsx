@@ -6,12 +6,24 @@ import { Upload } from 'react-native-tus-native';
 import * as ImagePicker from 'react-native-image-picker';
 
 export default function App() {
-  const [uploadResult, setUploadResult] = React.useState<number | undefined>();
+  const [uploadResult, setUploadResult] = React.useState<any>();
   const [imageResponse, setImageResponse] = React.useState<any>();
 
   // const exampleUpload = new Upload(  );
   React.useEffect(() => {
     console.log(JSON.stringify(imageResponse, null, 2));
+    const firstImage = imageResponse?.assets && imageResponse.assets[0];
+    const uploadOptions = {
+      metadata: {
+        name: 'example-name',
+      },
+      headers: {
+        "X-Example-Header": "some-value",
+      },
+      endpoint: 'http://0.0.0.0:1080/files/',
+    };
+    const tusUpload = new Upload(firstImage?.uri, uploadOptions);
+    tusUpload.start();
   }, [imageResponse]);
 
   const pickerOptions: ImagePicker.ImageLibraryOptions = {
