@@ -1,5 +1,4 @@
 import {
-  NativeEventEmitter,
   NativeModules,
   Platform,
 } from 'react-native';
@@ -21,117 +20,52 @@ const TusNative = NativeModules.TusNative
       }
     );
 
-const tusEventEmitter = new NativeEventEmitter(TusNative);
+type Options = {
+  metadata: {};
+  headers: {};
+  endpoint: string;
+};
 
-class Upload {
-  file;
-  options;
-  uploadId;
-  subscriptions;
-  url;
+export class Upload {
+  file: string;
+  options: Options;
+  uploadId: string;
+  url: string;
 
-  constructor(file, options) {
+  constructor(file: string, options: Options) {
     this.file = file;
     this.options = options;
-    this.subscriptions = [];
+    this.uploadId = '';
+    this.url = '';
   }
 
-  emitError(error) {
-    if(this.options.onError) {
-      this.options.onError(error);
-    } else {
-      throw error;
-    }
-  }
-
-  unsubscribe() {
-    this.subscriptions.forEach(subscription => subscription.remove());
-  }
-
-  onSuccess() {
-    this.options.onSuccess && this.options.onSuccess();
-  }
-
-  onProgress(bytesUploaded, bytesTotal) {
-    this.options.onProgress &&
-      this.options.onProgress(bytesUploaded, bytesTotal);
-  }
-
-  onError(error) {
-    this.options.onError && this.options.onError(error);
-  }
-
-  subscribe() {
-    this.subscriptions.push(
-      tusEventEmitter.addListener('onSuccess', (payload) => {
-        if (payload.uploadId === this.uploadId) {
-          this.url = payload.uploadUrl;
-          this.onSuccess();
-          this.unsubscribe();
-        }
-      })
-    );
-    this.subscriptions.push(
-      tusEventEmitter.addListener('onError', (payload) => {
-        if (payload.uploadId === this.uploadId) {
-          this.onError(payload.error);
-        }
-      })
-    );
-    this.subscriptions.push(
-      tusEventEmitter.addListener('onProgress', (payload) => {
-        if (payload.uploadId === this.uploadId) {
-          this.onProgress(payload.bytesWritten, payload.bytesTotal);
-        }
-      })
-    );
-  }
-
-  createUpload() {
-    return new Promise((resolve, reject) => {
-      const settings = { metadata, headers, endpoint };
-      TusNative.createUpload(this.file, settings, (uploadId, errorMessage) => {
-        this.uploadId = uploadId;
-        if (uploadId == null) {
-          const error = errorMessage
-            ? new Error(errorMessage)
-            : null;
-          reject(error);
-        } else {
-          this.subscribe();
-          resolve();
-        }
-      });
-    });
+  async createUpload() {
+    const {metadata, headers, endpoint} = this.options;
+    const settings = {metadata, headers, endpoint};
+    const nativeResponse = await TusNative.createUpload(this.file, settings);
+    console.log( nativeResponse );
   }
 
   start() {
     if(!this.file){
-      this.emitError(new Error('tus: no file or stream to upload provided'));
+      console.log(new Error('tus: no file or stream to upload provided'));
       return;
     }
     if(!this.options.endpoint) {
-      this.emitError(new Error('tus: no endpoint provided'));
+      console.log(new Error('tus: no endpoint provided'));
       return;
     }
     (this.uploadId
       ? Promise.resolve()
       : this.createUpload())
     .then(() => this.resume())
-    .catch((err) => this.emitError(err));
+    .catch((err) => console.log(err));
   }
 
-  resume() {
-    TusNative.resume(this.uploadId, (hasBeenResumed) => {
-      if (!hasBeenResumed) {
-        this.emitError(new Error('Error while resuming the upload'));
-      }
-    });
+  async resume() {
+    const nativeResponse = await TusNative.resume(this.uploadId);
+    console.log( nativeResponse );
   }
-}
-
-export function multiply(a: number, b: number): Promise<number> {
-  return TusNative.multiply(a, b);
 }
 
 export default { Upload };

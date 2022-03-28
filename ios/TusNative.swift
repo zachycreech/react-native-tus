@@ -1,31 +1,32 @@
-import TUSKit
+// import TUSKit
 
 @objc(TusNative)
 class TusNative: NSObject {
-  let tusClient: TUSClient
+  // let tusClient: TUSClient
 
-  init() {
-    tusClient = TUSClient(
-      server: URL(string: "https://tusd.tusdemo.net/files")!,
-      sessionIdentifier: "TUS DEMO",
-      storageDirectory: URL(string: "TUS")!
-    )
-    tusClient.delegate = self
+  // init() {
+    // https://tusd.tusdemo.net/files
+    // http://0.0.0.0:1080/files/
+    // tusClient = TUSClient(
+    //  server: URL(string: "http://0.0.0.0:1080/files/")!,
+    //  sessionIdentifier: "TUS DEMO",
+    //  storageDirectory: URL(string: "TUS")!
+    // )
+    // tusClient.delegate = self
+  // }
+
+  @objc(createUpload:options:resolve:reject:)
+  func createUpload(fileUrl: String, options: [String:Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    let endpoint: String = options["endpoint"]! as? String ?? ""
+    let headers = options["headers"]! as? [String: Any] ?? [:]
+    let metadata = options["metadata"]! as? [String: Any] ?? [:]
+
+    resolve( "Dummy response: Starting upload with endpoint: \(endpoint) and Headers: \(headers) and metadata: \(metadata)" )
   }
 
-  @objc(multiply:withB:withResolver:withRejecter:)
-  func multiply(a: Float, b: Float, resolve:RCTPromiseResolveBlock, reject:RCTPromiseRejectBlock) -> Void {
-    resolve(a*b)
-  }
-
-  @objc(createUpload:options:onCreated:)
-  func createUpload(fileUrl: String, options: Dictionary) -> Void {
-
-  }
-
-  @objc(resume:withCallback)
-  func resume() -> Void {
-
+  @objc(resume:resolve:reject:)
+  func resume(uploadId: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    resolve( "Dummy response: Resumed uploadId: \(uploadId)" )
   }
 
 }
