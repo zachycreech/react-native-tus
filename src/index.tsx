@@ -24,6 +24,8 @@ type Options = {
   metadata: {};
   headers: {};
   endpoint: string;
+  sessionIdentifier: string;
+  storageDirectory: string;
 };
 
 export class Upload {
@@ -31,40 +33,60 @@ export class Upload {
   options: Options;
   uploadId: string;
   url: string;
+  clientInitialization: Promise<void>;
 
   constructor(file: string, options: Options) {
     this.file = file;
     this.options = options;
     this.uploadId = '';
     this.url = '';
+
+    const {
+      endpoint,
+      sessionIdentifier = 'TUS Session',
+      storageDirectory = 'TUS',
+    } = options;
+    const clientSettings = {
+      sessionIdentifier,
+      storageDirectory,
+    };
+    // This is safe to call for each upload. The native bridge will respond without creating
+    // a new client if one already exists
+    this.clientInitialization = TusNative.initializeClient(
+      endpoint,
+      clientSettings
+    );
   }
 
   async createUpload() {
-    const {metadata, headers, endpoint} = this.options;
-    const settings = {metadata, headers, endpoint};
-    const nativeResponse = await TusNative.createUpload(this.file, settings);
-    console.log( nativeResponse );
+    const { metadata, headers, endpoint } = this.options;
+    const settings = { metadata, headers, endpoint, sessionIdentifier };
+    this.uploadId = await TusNative.createUpload(this.file, settings);
+    // this.subscribe();
   }
 
-  start() {
-    if(!this.file){
+  async start() {
+    await this.clientInitialization;
+    if (!this.file) {
       console.log(new Error('tus: no file or stream to upload provided'));
       return;
     }
-    if(!this.options.endpoint) {
+    if (!this.options.endpoint) {
       console.log(new Error('tus: no endpoint provided'));
       return;
     }
-    (this.uploadId
-      ? Promise.resolve()
-      : this.createUpload())
-    // .then(() => this.resume())
-    .catch((err) => console.log(err));
+    (this.uploadId ? Promise.resolve() : this.createUpload())
+      //.then(() => this.resume())
+      .catch((err) => console.log(err));
   }
 
   async resume() {
-    const nativeResponse = await TusNative.resume(this.uploadId);
-    console.log( nativeResponse );
+    const { sessionIdentifier } = this.options;
+    const nativeResponse = await TusNative.resume(
+      this.uploadId,
+      sessionIdentifier
+    );
+    console.log(nativeResponse);
   }
 }
 

@@ -18,7 +18,7 @@ export default function App() {
         name: 'example-name',
       },
       headers: {
-        "X-Example-Header": "some-value",
+        'X-Example-Header': 'some-value',
       },
       endpoint: 'http://0.0.0.0:1080/files/',
     };
