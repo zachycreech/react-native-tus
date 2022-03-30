@@ -43,12 +43,12 @@ export class Upload {
 
     const {
       endpoint,
-      sessionIdentifier = 'TUS Session',
-      storageDirectory = 'TUS',
+      sessionId = 'TUS Session',
+      storageDir = 'TUS',
     } = options;
     const clientSettings = {
-      sessionIdentifier,
-      storageDirectory,
+      sessionId,
+      storageDir,
     };
     // This is safe to call for each upload. The native bridge will respond without creating
     // a new client if one already exists
@@ -59,8 +59,8 @@ export class Upload {
   }
 
   async createUpload() {
-    const { metadata, headers, endpoint } = this.options;
-    const settings = { metadata, headers, endpoint, sessionIdentifier };
+    const { metadata, headers, endpoint, sessionId } = this.options;
+    const settings = { metadata, headers, endpoint, sessionId };
     this.uploadId = await TusNative.createUpload(this.file, settings);
     // this.subscribe();
   }
@@ -75,18 +75,9 @@ export class Upload {
       console.log(new Error('tus: no endpoint provided'));
       return;
     }
-    (this.uploadId ? Promise.resolve() : this.createUpload())
-      //.then(() => this.resume())
-      .catch((err) => console.log(err));
-  }
-
-  async resume() {
-    const { sessionIdentifier } = this.options;
-    const nativeResponse = await TusNative.resume(
-      this.uploadId,
-      sessionIdentifier
+    (this.uploadId ? Promise.resolve() : this.createUpload()).catch((err) =>
+      console.log(err)
     );
-    console.log(nativeResponse);
   }
 }
 

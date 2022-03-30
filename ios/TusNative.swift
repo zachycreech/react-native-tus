@@ -14,16 +14,16 @@ class TusNative: NSObject {
    */
   @objc(initializeClient:options:resolver:rejecter:)
   func initializeClient(serverUrl: String, options: [String : Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-    let sessionIdentifier: String = options["sessionIdentifier"]! as? String ?? "TUS Session"
-    let storageDirectory: String = options["storageDirectory"]! as? String ?? "TUS"
-    if tusClients[sessionIdentifier] != nil {
+    let sessionId: String = options["sessionId"]! as? String ?? "TUS Session"
+    let storageDir: String = options["storageDir"]! as? String ?? "TUS"
+    if tusClients[sessionId] != nil {
       // Client already initialized
       resolve(NSNull())
     } else {
       let tusClient = try! TUSClient(
         server: URL(string: serverUrl)!,
-        sessionIdentifier: sessionIdentifier,
-        storageDirectory: URL(string: storageDirectory)!
+        sessionIdentifier: sessionId,
+        storageDirectory: URL(string: storageDir)!
       )
       tusClient.start()
       tusClients[sessionIdentifier] = tusClient
@@ -38,8 +38,9 @@ class TusNative: NSObject {
     let endpoint: String = options["endpoint"]! as? String ?? ""
     let headers = options["headers"]! as? [String: String] ?? [:]
     let metadata = options["metadata"]! as? [String: String] ?? [:]
+    let sessionId: String = options["sessionId"]! as? String ?? "TUS Session"
 
-    if let tusClient = tusClients[endpoint] {
+    if let tusClient = tusClients[sessionId] {
       let uploadId = try! tusClient.uploadFileAt(
         filePath: fileToBeUploaded,
         uploadURL: URL(string: endpoint)!,
@@ -51,18 +52,6 @@ class TusNative: NSObject {
       let error = NSError(domain: "TUS_IOS_BRIDGE", code: 200, userInfo: nil)
       reject( "CLIENT_NOT_INITIALIZED", "TUS Client is not initialized", error )
     }
-  }
-
-  @objc(resume:sessionId:resolver:rejecter:)
-  func resume(uploadId: String, sessionId: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-    if let tusClient = tusClients[endpoint] {
-      let uploadId = try! tusClient.uploadFileAt(filePath: fileToBeUploaded)
-      resolve( "Starting upload \(uploadId) with endpoint: \(endpoint) headers: \(headers) metadata: \(metadata)" )
-    } else {
-      let error = NSError(domain: "TUS_IOS_BRIDGE", code: 200, userInfo: nil)
-      reject( "CLIENT_NOT_INITIALIZED", "TUS Client is not initialized", error )
-    }
-    resolve(NSNull())
   }
 
 }

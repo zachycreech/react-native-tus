@@ -12,9 +12,4 @@ RCT_EXTERN_METHOD(createUpload:(NSString *)fileUrl
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(resume:(NSString *)uploadId
-                  sessionId:(NSString *)sessionId
-                  resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
-
 @end
