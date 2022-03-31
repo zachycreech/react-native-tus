@@ -29,7 +29,7 @@ class TusNative: RCTEventEmitter {
   }
 
   override public static func requiresMainQueueSetup() -> Bool {
-    return true;
+    return false;
   }
 
   /**
@@ -50,6 +50,7 @@ class TusNative: RCTEventEmitter {
         storageDirectory: URL(string: storageDir)!
       )
       tusClient.delegate = self
+      try! tusClient.reset()
       tusClient.start()
       tusClients[sessionId] = tusClient
 
