@@ -11,6 +11,9 @@ export default function App() {
 
   // const exampleUpload = new Upload(  );
   React.useEffect(() => {
+    if (!imageResponse) {
+      return;
+    }
     console.log(JSON.stringify(imageResponse, null, 2));
     const firstImage = imageResponse?.assets && imageResponse.assets[0];
     const uploadOptions = {
@@ -20,7 +23,8 @@ export default function App() {
       headers: {
         'X-Example-Header': 'some-value',
       },
-      endpoint: 'http://0.0.0.0:1080/files/',
+      // endpoint: 'http://0.0.0.0:1080/files/',
+      endpoint: 'http://10.0.0.84:1080/files/',
     };
     const tusUpload = new Upload(firstImage?.uri, uploadOptions);
     tusUpload.start();
