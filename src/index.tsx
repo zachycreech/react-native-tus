@@ -1,31 +1,12 @@
-import {
-  NativeModules,
-  Platform,
-} from 'react-native';
-
-const LINKING_ERROR =
-  `The package 'react-native-tus-native' doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
-  '- You rebuilt the app after installing the package\n' +
-  '- You are not using Expo managed workflow\n';
-
-const TusNative = NativeModules.TusNative
-  ? NativeModules.TusNative
-  : new Proxy(
-      {},
-      {
-        get() {
-          throw new Error(LINKING_ERROR);
-        },
-      }
-    );
+import TusNative from './nativeBridge';
+import events from './events';
 
 type Options = {
   metadata: {};
   headers: {};
   endpoint: string;
-  sessionIdentifier: string;
-  storageDirectory: string;
+  sessionId: string;
+  storageDir: string;
 };
 
 export class Upload {
@@ -56,12 +37,34 @@ export class Upload {
       endpoint,
       clientSettings
     );
+    events.addUploadStartedListener((param) =>
+      console.log('Upload Started: ', param)
+    );
+    events.addUploadFinishedListener((param) =>
+      console.log('Upload Finished: ', param)
+    );
+    events.addUploadFailedListener((param) =>
+      console.log('Upload Failed: ', param)
+    );
+    events.addFileErrorListener((param) => console.log('File Error: ', param));
+    events.addTotalProgressListener((param) =>
+      console.log('Total Progress: ', param)
+    );
+    events.addProgressForListener((param) =>
+      console.log('Progress For: ', param)
+    );
   }
 
   async createUpload() {
-    const { metadata, headers, endpoint, sessionId } = this.options;
+    const {
+      metadata,
+      headers,
+      endpoint,
+      sessionId = 'TUS Session',
+    } = this.options;
     const settings = { metadata, headers, endpoint, sessionId };
     this.uploadId = await TusNative.createUpload(this.file, settings);
+    console.log(`Upload ID: ${this.uploadId}`);
     // this.subscribe();
   }
 

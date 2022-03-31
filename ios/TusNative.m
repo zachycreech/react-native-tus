@@ -1,6 +1,7 @@
 #import <React/RCTBridgeModule.h>
+#import <React/RCTEventEmitter.h>
 
-@interface RCT_EXTERN_MODULE(TusNative, NSObject)
+@interface RCT_EXTERN_MODULE(TusNative, RCTEventEmitter)
 
 RCT_EXTERN_METHOD(initializeClient:(NSString *)serverUrl
                   options:(NSDictionary *)options

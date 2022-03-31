@@ -1,13 +1,37 @@
 import Foundation
 import TUSKit
+import React
 
 @objc(TusNative)
-class TusNative: NSObject {
+class TusNative: RCTEventEmitter {
+  static let uploadStartedEvent = "UploadStarted"
+  static let uploadFinishedEvent = "UploadFinished"
+  static let uploadFailedEvent = "UploadFailed"
+  static let fileErrorEvent = "FileError"
+  static let totalProgressEvent = "TotalProgress"
+  static let progressForEvent = "progressFor"
+
   var tusClients: [String : TUSClient]
 
   public override init() {
     tusClients = [:]
   }
+
+  override func supportedEvents() -> [String]! {
+    return [
+      TusNative.uploadStartedEvent,
+      TusNative.uploadFinishedEvent,
+      TusNative.uploadFailedEvent,
+      TusNative.fileErrorEvent,
+      TusNative.totalProgressEvent,
+      TusNative.progressForEvent
+    ]
+  }
+
+  override public static func requiresMainQueueSetup() -> Bool {
+    return true;
+  }
+
   /**
    * initializeClient
    * This has been broken out of the init function to allow clients to be initialized from inside of JS.
@@ -25,8 +49,9 @@ class TusNative: NSObject {
         sessionIdentifier: sessionId,
         storageDirectory: URL(string: storageDir)!
       )
+      tusClient.delegate = self
       tusClient.start()
-      tusClients[sessionIdentifier] = tusClient
+      tusClients[sessionId] = tusClient
 
       resolve(NSNull())
     }
@@ -52,6 +77,73 @@ class TusNative: NSObject {
       let error = NSError(domain: "TUS_IOS_BRIDGE", code: 200, userInfo: nil)
       reject( "CLIENT_NOT_INITIALIZED", "TUS Client is not initialized", error )
     }
+  }
+}
+
+extension TusNative: TUSClientDelegate {
+  func didStartUpload(id: UUID, context: [String: String]?, client: TUSClient) {
+    print("TUSClient started upload, id is \(id)")
+    print("TUSClient remaining is \(client.remainingUploads)")
+
+    let body: [String:String] = [
+      "uploadId": "\(id)",
+      "sessionId": "\(client.sessionIdentifier)"
+    ]
+    sendEvent(withName: TusNative.uploadStartedEvent, body: body)
+  }
+
+  func didFinishUpload(id: UUID, url: URL, context: [String: String]?, client: TUSClient) {
+    print("TUSClient finished upload, id is \(id) url is \(url)")
+    print("TUSClient remaining is \(client.remainingUploads)")
+    if client.remainingUploads == 0 {
+      print("Finished uploading")
+    }
+    let body: [String:String] = [
+      "uploadId": "\(id)",
+      "url": "\(url)",
+      "sessionId": "\(client.sessionIdentifier)"
+    ]
+    sendEvent(withName: TusNative.uploadFinishedEvent, body: body)
+  }
+
+  func uploadFailed(id: UUID, error: Error, context: [String: String]?, client: TUSClient) {
+    print("TUSClient upload failed for \(id) error \(error)")
+    let body: [String:Any] = [
+      "uploadId": "\(id)",
+      "sessionId": "\(client.sessionIdentifier)",
+      "error": error
+    ]
+    sendEvent(withName: TusNative.uploadFailedEvent, body: body)
+  }
+
+  func fileError(error: TUSClientError, client: TUSClient) {
+    print("TUSClient File error \(error)")
+    let body: [String:Any] = [
+      "sessionId": "\(client.sessionIdentifier)",
+      "error": error
+    ]
+    sendEvent(withName: TusNative.fileErrorEvent, body: body)
+  }
+
+
+  func totalProgress(bytesUploaded: Int, totalBytes: Int, client: TUSClient) {
+    let body: [String:Any] = [
+      "bytesUploaded": bytesUploaded,
+      "totalBytes": totalBytes,
+      "sessionId": "\(client.sessionIdentifier)"
+    ]
+    sendEvent(withName: TusNative.totalProgressEvent, body: body)
+  }
+
+
+  func progressFor(id: UUID, context: [String: String]?, bytesUploaded: Int, totalBytes: Int, client: TUSClient) {
+    let body: [String:Any] = [
+      "uploadId": "\(id)",
+      "bytesUploaded": bytesUploaded,
+      "totalBytes": totalBytes,
+      "sessionId": "\(client.sessionIdentifier)"
+    ]
+    sendEvent(withName: TusNative.progressForEvent, body: body)
   }
 
 }
