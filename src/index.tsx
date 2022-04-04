@@ -1,7 +1,6 @@
 import TusNative from './nativeBridge';
 import events from './events';
 import type {
-  UploadStartedDataType,
   UploadFinishedDataType,
   UploadFailedDataType,
   ProgressForDataType,
@@ -13,7 +12,7 @@ type Options = {
   endpoint: string;
   sessionId: string;
   storageDir: string;
-  onSuccess?: () => void;
+  onSuccess?: (uploadId: string) => void;
   onProgress?: (bytesUploaded: number, bytesTotal: number) => void;
   onError?: (error: Error | unknown) => void;
 };
@@ -32,6 +31,10 @@ events.addTotalProgressListener((param) =>
   console.log('Total Progress: ', param)
 );
 events.addProgressForListener((param) => console.log('Progress For: ', param));
+
+export const scheduleBackgroundTasks = () => {
+  TusNative.scheduleBackgroundTasks();
+};
 
 export class Upload {
   file: string;
@@ -105,8 +108,8 @@ export class Upload {
     );
   }
 
-  onSuccess() {
-    this.options.onSuccess && this.options.onSuccess();
+  onSuccess(uploadId: string) {
+    this.options.onSuccess && this.options.onSuccess(uploadId);
   }
 
   onProgress(bytesUploaded: number, bytesTotal: number) {
@@ -124,7 +127,7 @@ export class Upload {
         ({ uploadId, url }: UploadFinishedDataType) => {
           if (uploadId === this.uploadId) {
             this.url = url;
-            this.onSuccess();
+            this.onSuccess(uploadId);
             this.unsubscribe();
           }
         }

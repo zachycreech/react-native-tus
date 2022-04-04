@@ -6,7 +6,7 @@ import { Upload } from 'react-native-tus-native';
 import * as ImagePicker from 'react-native-image-picker';
 
 export default function App() {
-  const [uploadResult, setUploadResult] = React.useState<any>();
+  const [uploadResult, setUploadResult] = React.useState<any>([]);
   const [imageResponse, setImageResponse] = React.useState<any>();
 
   // const exampleUpload = new Upload(  );
@@ -25,6 +25,11 @@ export default function App() {
       },
       // endpoint: 'http://0.0.0.0:1080/files/',
       endpoint: 'http://10.0.0.84:1080/files/',
+      onSuccess: (uploadId: string) =>
+        setUploadResult((oldUploadResult: Array<string>) => [
+          ...oldUploadResult,
+          uploadId,
+        ]),
     };
     const tusUpload = new Upload(firstImage?.uri, uploadOptions);
     tusUpload.start();
@@ -57,7 +62,10 @@ export default function App() {
             />
           </View>
         ))}
-      <Text>Upload Result: {uploadResult}</Text>
+      {uploadResult.length > 0 &&
+        uploadResult.map((result: string) => (
+          <Text>Upload Result: {result} - Success!</Text>
+        ))}
     </View>
   );
 }
