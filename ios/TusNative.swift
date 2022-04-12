@@ -1,6 +1,7 @@
 import Foundation
 import TUSKit
 import React
+import UIKit
 
 @objc(TusNative)
 class TusNative: RCTEventEmitter {
@@ -9,12 +10,14 @@ class TusNative: RCTEventEmitter {
   static let uploadFailedEvent = "UploadFailed"
   static let fileErrorEvent = "FileError"
   static let totalProgressEvent = "TotalProgress"
-  static let progressForEvent = "progressFor"
+  static let progressForEvent = "ProgressFor"
 
-  var tusClients: [String : TUSClient]
+  let tusClient: TUSClient
 
   public override init() {
-    tusClients = [:]
+    tusClient = RNTusClientInstanceHolder.sharedInstance.tusClient!
+    super.init()
+    tusClient.delegate = self
   }
 
   override func supportedEvents() -> [String]! {
@@ -32,30 +35,10 @@ class TusNative: RCTEventEmitter {
     return false;
   }
 
-  /**
-   * initializeClient
-   * This has been broken out of the init function to allow clients to be initialized from inside of JS.
-   */
-  @objc(initializeClient:options:resolver:rejecter:)
-  func initializeClient(serverUrl: String, options: [String : Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-    let sessionId: String = options["sessionId"]! as? String ?? "TUS Session"
-    let storageDir: String = options["storageDir"]! as? String ?? "TUS"
-    if tusClients[sessionId] != nil {
-      // Client already initialized
-      resolve(NSNull())
-    } else {
-      let tusClient = try! TUSClient(
-        server: URL(string: serverUrl)!,
-        sessionIdentifier: sessionId,
-        storageDirectory: URL(string: storageDir)!
-      )
-      tusClient.delegate = self
-      try! tusClient.reset()
-      tusClient.start()
-      tusClients[sessionId] = tusClient
-
-      resolve(NSNull())
-    }
+  @objc(getRemainingUploads:rejecter:)
+  func getRemainingUploads(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    let remainingUploads = tusClient.getRemainingUploads()
+    resolve(remainingUploads)
   }
 
   @objc(createUpload:options:resolver:rejecter:)
@@ -64,19 +47,85 @@ class TusNative: RCTEventEmitter {
     let endpoint: String = options["endpoint"]! as? String ?? ""
     let headers = options["headers"]! as? [String: String] ?? [:]
     let metadata = options["metadata"]! as? [String: String] ?? [:]
-    let sessionId: String = options["sessionId"]! as? String ?? "TUS Session"
 
-    if let tusClient = tusClients[sessionId] {
-      let uploadId = try! tusClient.uploadFileAt(
-        filePath: fileToBeUploaded,
-        uploadURL: URL(string: endpoint)!,
-        customHeaders: headers,
-        context: metadata
-      )
-      resolve( "\(uploadId)" )
-    } else {
-      let error = NSError(domain: "TUS_IOS_BRIDGE", code: 200, userInfo: nil)
-      reject( "CLIENT_NOT_INITIALIZED", "TUS Client is not initialized", error )
+    let uploadId = try! tusClient.uploadFileAt(
+      filePath: fileToBeUploaded,
+      uploadURL: URL(string: endpoint)!,
+      customHeaders: headers,
+      context: metadata
+    )
+    resolve( "\(uploadId)" )
+  }
+
+  @objc(startAll:rejecter:)
+  func startAll(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    let remainingUploads = tusClient.start()
+    resolve(remainingUploads)
+  }
+
+  @objc(startSelection:resolver:rejecter:)
+  func startSelection(uploadIds: [String], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    let taskIds = uploadIds.map { UUID(uuidString: $0)! }
+    tusClient.start(taskIds: taskIds)
+    resolve(NSNull())
+  }
+
+  @objc(pauseAll:rejecter:)
+  func pauseAll(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    tusClient.stopAndCancelAll()
+    resolve(NSNull())
+  }
+
+  @objc(pauseById:resolver:rejecter:)
+  func pauseById(uploadId: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    do {
+      let id = UUID(uuidString: uploadId)!
+      try tusClient.cancel(id: id)
+      resolve(NSNull())
+    } catch {
+      reject("PAUSE_ERROR", "Unexpected error", error)
+    }
+  }
+
+  @objc(cancelAll:rejecter:)
+  func cancelAll(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    do {
+      try tusClient.reset()
+      resolve(NSNull())
+    } catch {
+      reject("CANCEL_ALL_ERROR", "Unexpected error", error)
+    }
+  }
+
+  @objc(cancelById:resolver:rejecter:)
+  func cancelById(uploadId: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    do {
+      let id = UUID(uuidString: uploadId)!
+      try tusClient.removeCacheFor(id: id)
+      resolve(NSNull())
+    } catch {
+      reject("CANCEL_ERROR", "Unexpected error", error)
+    }
+  }
+
+  @objc(retryById:resolver:rejecter:)
+  func retryById(uploadId: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    do {
+      let id = UUID(uuidString: uploadId)!
+      try tusClient.retry(id: id)
+      resolve(NSNull())
+    } catch {
+      reject("RETRY_ERROR", "Unexpected error", error)
+    }
+  }
+
+  @objc(getFailedUploadIds:rejecter:)
+  func getFailedUploadIds(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    do {
+      let failedUploads = try tusClient.failedUploadIDs()
+      resolve( failedUploads )
+    } catch {
+      reject("GET_FAILED_IDS_ERROR", "Unexpected error", error)
     }
   }
 }
