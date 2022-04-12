@@ -10,17 +10,28 @@ import UIKit
 import React
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, RCTBridgeDelegate {
+  func sourceURL(for bridge: RCTBridge!) -> URL! {
+#if DEBUG
+    // Obj-C
+    // return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
+    return RCTBundleURLProvider.sharedSettings().jsBundleURL(forBundleRoot: "index", fallbackResource: nil)
+#else
+    // Obj-C
+    // return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
+    return Bundle.main.url(forResource: "main", withExtension: "jsbundle")!
+#endif
+  }
+  
   var window: UIWindow?
-  var bridge: RCTBridge?
+    var bridge: RCTBridge?
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     // Override point for customization after application launch.
     // Obj-C
     // RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
-    let jsCodeLocation = sourceUrlForBridge()
-    bridge = RCTBridge(bundleURL: jsCodeLocation, moduleProvider: nil, launchOptions: launchOptions)
-
+    bridge = RCTBridge.init(delegate: self, launchOptions: launchOptions)
+    
     // Instantiate root view here instead of scene to start the bundler on app launch
     // Obj-C
     // RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
@@ -30,7 +41,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     RNBridgeInstanceHolder.sharedInstance.bridge = bridge
     RNBridgeInstanceHolder.sharedInstance.rctRootView = rootView
-
+    
     // Scenes require this block to not run but this is required for under iOS 13
     guard #available(iOS 13, *) else {
       // Obj-C
@@ -40,6 +51,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       // self.window.rootViewController = rootViewController;
       // [self.window makeKeyAndVisible];
       // return YES;
+      print("iOS 12 or lower: Initializing UI in AppDelegate")
       self.window = UIWindow(frame: UIScreen.main.bounds)
       let rootViewController = UIViewController()
       rootViewController.view = rootView
@@ -62,18 +74,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   @available(iOS 13, *)
   func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
-  }
-
-  func sourceUrlForBridge() -> URL {
-#if DEBUG
-    // Obj-C
-    // return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
-    return RCTBundleURLProvider.sharedSettings().jsBundleURL(forBundleRoot: "index", fallbackResource: nil)
-#else
-    // Obj-C
-    // return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
-    return Bundle.main.url(forResource: "main", withExtension: "jsbundle")!
-#endif
   }
 
   func applicationWillResignActive(_ application: UIApplication) {
