@@ -10,41 +10,52 @@ type Options = {
   metadata: {};
   headers: {};
   endpoint: string;
-  sessionId: string;
   storageDir: string;
   onSuccess?: (uploadId: string) => void;
   onProgress?: (bytesUploaded: number, bytesTotal: number) => void;
   onError?: (error: Error | unknown) => void;
 };
 
-events.addUploadStartedListener((param) =>
-  console.log('Upload Started: ', param)
-);
-events.addUploadFinishedListener((param) =>
-  console.log('Upload Finished: ', param)
-);
-events.addUploadFailedListener((param) =>
-  console.log('Upload Failed: ', param)
-);
-events.addFileErrorListener((param) => console.log('File Error: ', param));
-events.addTotalProgressListener((param) =>
-  console.log('Total Progress: ', param)
-);
-events.addProgressForListener((param) => console.log('Progress For: ', param));
+// events.addUploadStartedListener((param) =>
+//   console.log('Upload Started: ', param)
+// );
+// events.addUploadFinishedListener((param) =>
+//   console.log('Upload Finished: ', param)
+// );
+// events.addUploadFailedListener((param) =>
+//   console.log('Upload Failed: ', param)
+// );
+// events.addFileErrorListener((param) => console.log('File Error: ', param));
+// events.addTotalProgressListener((param) =>
+//   console.log('Total Progress: ', param)
+// );
+// events.addProgressForListener((param) => console.log('Progress For: ', param));
 
-export const scheduleBackgroundTasks = () => {
-  TusNative.scheduleBackgroundTasks();
-};
+export const getRemainingUploads = () => TusNative.getRemainingUploads();
+
+export const startAll = () => TusNative.startAll();
+
+export const startSelection = (uploadIds: [string]) =>
+  TusNative.startSelection(uploadIds);
+
+export const pauseAll = () => TusNative.pauseAll();
+
+export const pauseById = (uploadId: string) => TusNative.pauseById(uploadId);
+
+export const cancelAll = () => TusNative.cancelAll();
+
+export const cancelById = (uploadId: string) => TusNative.cancelById(uploadId);
+
+export const retryById = (uploadId: string) => TusNative.retryById(uploadId);
+
+export const getFailedUploadIds = () => TusNative.getFailedUploadIds();
 
 export class Upload {
   file: string;
   options: Options;
   uploadId: string;
   url: string;
-  clientInitialization: Promise<void>;
   subscriptions: Array<{ remove: () => void }>;
-  sessionId: string;
-  storageDir: string;
 
   constructor(file: string, options: Options) {
     this.file = file;
@@ -52,30 +63,11 @@ export class Upload {
     this.uploadId = '';
     this.url = '';
     this.subscriptions = [];
-
-    const { endpoint, sessionId, storageDir } = options;
-    this.sessionId = sessionId || 'TUS Session';
-    this.storageDir = storageDir || 'TUS';
-    const clientSettings = {
-      sessionId: this.sessionId,
-      storageDir: this.storageDir,
-    };
-    // This is safe to call for each upload. The native bridge will respond without creating
-    // a new client if one already exists with the provided sessionId
-    this.clientInitialization = TusNative.initializeClient(
-      endpoint,
-      clientSettings
-    );
   }
 
   async createUpload() {
-    const {
-      metadata,
-      headers,
-      endpoint,
-      sessionId = 'TUS Session',
-    } = this.options;
-    const settings = { metadata, headers, endpoint, sessionId };
+    const { metadata, headers, endpoint } = this.options;
+    const settings = { metadata, headers, endpoint };
     try {
       this.uploadId = await TusNative.createUpload(this.file, settings);
 
@@ -94,7 +86,6 @@ export class Upload {
   }
 
   async start() {
-    await this.clientInitialization;
     if (!this.file) {
       console.log(new Error('tus: no file or stream to upload provided'));
       return;
@@ -106,6 +97,21 @@ export class Upload {
     (this.uploadId ? Promise.resolve() : this.createUpload()).catch((err) =>
       console.log(err)
     );
+  }
+
+  async findPreviousUploads() {
+    const previousUploads = await getRemainingUploads();
+    return previousUploads
+      ? previousUploads.filter(
+          (upload) =>
+            upload?.context?.metadata?.name === this.options?.metadata?.name
+        )
+      : [];
+  }
+
+  async resumeFromPreviousUpload(previousUpload: any) {
+    this.uploadId = previousUpload?.id;
+    startSelection([this.uploadId]);
   }
 
   onSuccess(uploadId: string) {
