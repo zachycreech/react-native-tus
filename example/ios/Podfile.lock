@@ -283,12 +283,12 @@ DEPENDENCIES:
   - React-RCTText (from `../node_modules/react-native/Libraries/Text`)
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - TUSKit (from `../../../TUSKit`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
   trunk:
     - boost-for-react-native
-    - TUSKit
 
 EXTERNAL SOURCES:
   DoubleConversion:
@@ -345,6 +345,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/Vibration"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  TUSKit:
+    :path: "../../../TUSKit"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -380,6 +382,6 @@ SPEC CHECKSUMS:
   TUSKit: 07735af2d1a47f5051dea7131515b600b634fce9
   Yoga: 4bd86afe9883422a7c4028c00e34790f560923d6
 
-PODFILE CHECKSUM: d633f91a3f5a273f9a1d1ba9d477deca8ab3b4b3
+PODFILE CHECKSUM: 4533f1801404df3751e6b272e50286f6b0e6bda1
 
 COCOAPODS: 1.11.3
