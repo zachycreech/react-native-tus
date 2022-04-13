@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import React
+import react_native_tus
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, RCTBridgeDelegate {
@@ -41,6 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, RCTBridgeDelegate {
 
     RNBridgeInstanceHolder.sharedInstance.bridge = bridge
     RNBridgeInstanceHolder.sharedInstance.rctRootView = rootView
+    RNTusClientInstanceHolder.sharedInstance.initializeBackgroundClient()
     
     // Scenes require this block to not run but this is required for under iOS 13
     guard #available(iOS 13, *) else {

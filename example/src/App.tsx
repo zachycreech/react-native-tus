@@ -8,9 +8,7 @@ import {
 } from 'react-native';
 import * as ImagePicker from 'react-native-image-picker';
 import { DataTable } from 'react-native-paper';
-import TusUpload, { Upload, startAll } from 'react-native-tus';
-
-
+import TusUpload, { Upload } from 'react-native-tus';
 
 export default function App() {
   const [uploadResult, setUploadResult] = React.useState<any>({});
@@ -33,55 +31,84 @@ export default function App() {
       // endpoint: 'http://0.0.0.0:1080/files/',
       endpoint: 'http://18.237.215.6:1080/files/',
     };
-    for( let x = 0; x < 1; x += 1 ) {
+    for (let x = 0; x < 100; x += 1) {
       const tusUpload = new Upload(firstImage?.uri, uploadOptions);
       tusUpload.start();
     }
-    startAll();
   }, [imageResponse]);
 
-  TusUpload.events.addUploadStartedListener((param) =>
-    setUploadResult((oldResult: any) => {
-      const { uploadId } = param;
-      let newResult = oldResult;
-      newResult[uploadId] = {
-        uploadId,
-        status: 'Started',
-      };
-      return newResult;
-    })
-  );
-  TusUpload.events.addUploadFinishedListener((param) =>
-    setUploadResult((oldResult: any) => {
-      const { uploadId } = param;
-      let newResult = oldResult;
-      newResult[uploadId] = {
-        uploadId,
-        status: 'Finished',
-      };
-      return newResult;
-    })
-  );
-  TusUpload.events.addUploadFailedListener((param) =>
-    setUploadResult((oldResult: any) => {
-      const { uploadId } = param;
-      let newResult = oldResult;
-      newResult[uploadId] = {
-        uploadId,
-        status: 'Failed',
-      };
-      return newResult;
-    })
-  );
-  TusUpload.events.addFileErrorListener((param) =>
-    console.log('File Error: ', param)
-  );
-  TusUpload.events.addTotalProgressListener((param) =>
-    console.log('Total Progress: ', param)
-  );
-  TusUpload.events.addProgressForListener((param) =>
-    console.log('Progress For: ', param)
-  );
+  React.useEffect(() => {
+    let listeners: EventSubscription[] = [];
+    const uploadStartedListener = TusUpload.events.addUploadStartedListener(
+      (param) => {
+        // console.log(`Upload started: `, param);
+        const { uploadId } = param;
+        setUploadResult((oldResult: any) => {
+          let newResult = { ...oldResult };
+          newResult[uploadId] = {
+            uploadId,
+            status: 'Started',
+          };
+          return newResult;
+        });
+      }
+    );
+    listeners.push(uploadStartedListener);
+
+    const uploadFinishedListener = TusUpload.events.addUploadFinishedListener(
+      (param) => {
+        // console.log(`Upload started: `, param);
+        const { uploadId } = param;
+        setUploadResult((oldResult: any) => {
+          let newResult = { ...oldResult };
+          newResult[uploadId] = {
+            uploadId,
+            status: 'Finished',
+          };
+          return newResult;
+        });
+      }
+    );
+    listeners.push(uploadFinishedListener);
+
+    const uploadFailedListener = TusUpload.events.addUploadFailedListener(
+      (param) => {
+        // console.log(`Upload started: `, param);
+        const { uploadId } = param;
+        setUploadResult((oldResult: any) => {
+          let newResult = { ...oldResult };
+          newResult[uploadId] = {
+            uploadId,
+            status: 'Failed',
+          };
+          return newResult;
+        });
+      }
+    );
+    listeners.push(uploadFailedListener);
+
+    // const fileErrorListener = TusUpload.events.addFileErrorListener((param) => {
+    //   console.log('File Error: ', param);
+    // });
+    // listeners.push(fileErrorListener);
+
+    // Progress events can get a bit spammy
+    // const totalProgressListener = TusUpload.events.addTotalProgressListener(
+    //   (param) => {
+    //     console.log('Total Progress: ', param);
+    //   }
+    // );
+    // listeners.push(totalProgressListener);
+
+    // const progressForListener = TusUpload.events.addProgressForListener(
+    //   (param) => {
+    //     console.log('Progress For: ', param);
+    //   }
+    // );
+    // listeners.push(progressForListener);
+
+    return () => listeners.forEach((listener) => listener.remove());
+  }, []);
 
   const pickerOptions: ImagePicker.ImageLibraryOptions = {
     selectionLimit: 1,

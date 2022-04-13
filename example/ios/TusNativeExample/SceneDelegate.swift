@@ -9,16 +9,13 @@ import Foundation
 import UIKit
 import SwiftUI
 import React
-import react_native_tus
 
 @available(iOS 13, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
   var window: UIWindow?
 
   func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-    print("iOS 13 or higher: Initializing Scene") 
-    RNTusClientInstanceHolder.sharedInstance.initializeBackgroundClient()
-    
+    print("iOS 13 or higher: Initializing Scene")
     let rootViewController = UIViewController()
     rootViewController.view = RNBridgeInstanceHolder.sharedInstance.rctRootView!
 
