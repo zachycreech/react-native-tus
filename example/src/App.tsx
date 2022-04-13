@@ -2,12 +2,13 @@ import * as React from 'react';
 import {
   StyleSheet,
   View,
-  Text,
   Button,
   Image,
   ScrollView,
+  Text,
 } from 'react-native';
 import * as ImagePicker from 'react-native-image-picker';
+import { DataTable } from 'react-native-paper';
 import TusUpload, { Upload, startAll } from 'react-native-tus';
 
 TusUpload.events.addUploadStartedListener((param) =>
@@ -68,10 +69,9 @@ export default function App() {
     selectionLimit: 1,
     mediaType: 'photo',
     includeBase64: false,
-    inclueExtra: true,
+    includeExtra: true,
   };
 
-  console.log( pendingUploads );
   return (
     <View style={styles.container}>
       <Button
@@ -92,10 +92,18 @@ export default function App() {
           </View>
         ))}
       <ScrollView>
-        {uploadResult.length > 0 &&
-          uploadResult.map((result: string) => (
-            <Text key={result}>Upload Result: {result} - Success!</Text>
+        <DataTable style={styles.table}>
+          <DataTable.Header>
+            <DataTable.Title style={styles.idColumn}>Upload ID</DataTable.Title>
+            <DataTable.Title style={styles.statusColumn} numeric>Status</DataTable.Title>
+          </DataTable.Header>
+          {uploadResult.map((result: string, key: number) => (
+            <DataTable.Row key={key}>
+              <DataTable.Cell style={styles.idColumn}>{result}</DataTable.Cell>
+              <DataTable.Cell style={styles.statusColumn} numeric>???</DataTable.Cell>
+            </DataTable.Row>
           ))}
+        </DataTable>
       </ScrollView>
     </View>
   );
@@ -104,7 +112,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: 'stretch',
     justifyContent: 'center',
   },
   box: {
@@ -115,5 +123,15 @@ const styles = StyleSheet.create({
   image: {
     marginVertical: 24,
     alignItems: 'center',
+  },
+  table: {
+    flex: 1,
+    backgroundColor: 'snow',
+  },
+  idColumn: {
+    flex: 6,
+  },
+  statusColumn: {
+    flex: 1,
   },
 });

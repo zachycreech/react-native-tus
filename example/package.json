@@ -9,9 +9,12 @@
     "start": "react-native start"
   },
   "dependencies": {
+    "@types/react-native": "^0.67.4",
     "react": "16.13.1",
     "react-native": "0.63.4",
-    "react-native-image-picker": "^4.7.3"
+    "react-native-image-picker": "^4.7.3",
+    "react-native-paper": "^4.12.0",
+    "react-native-vector-icons": "^9.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
