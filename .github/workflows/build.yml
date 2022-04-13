@@ -58,6 +58,6 @@ jobs:
     - name: Install Yarn
       run: npm install -g yarn
     - run: echo "registry=https://npm.pkg.github.com/@Cantabar" >> .npmrc
-    - run: yarn publish "$(ls *.tgz)"
+    - run: npm publish $(ls *.tgz)
       env:
         NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
