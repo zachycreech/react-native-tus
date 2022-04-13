@@ -11,10 +11,12 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js 14.x
-      uses: actions/setup-node@v1
+    - name: Use Node.js 16.x
+      uses: actions/setup-node@v3
       with:
-        node-version: 14.x
+        node-version: 16.x
+    - name: Install Yarn
+      run: npm install -g yarn
     - run: yarn install --frozen-lockfile
     - run: yarn lint
     - run: yarn test
@@ -23,10 +25,12 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js 14.x
-        uses: actions/setup-node@v1
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: 16.x
+      - name: Install Yarn
+        run: npm install -g yarn
       - run: yarn install --frozen-lockfile
       - run: yarn pack
       - name: Upload
@@ -38,18 +42,20 @@ jobs:
     name: "Publish to GitHub Packages"
     needs: [package]
     runs-on: ubuntu-18.04
-    if: github.repository_owner == 'cantabar'
+    if: github.repository_owner == 'Cantabar'
     steps:
     - name: Upload
       uses: actions/download-artifact@v2
       with:
           name: package
-    - uses: actions/setup-node@v1
+    - uses: actions/setup-node@v3
       with:
-        node-version: 14.x
+        node-version: 16.x
         registry-url: https://npm.pkg.github.com/
-        scope: "@aaronpowell"
-    - run: echo "registry=https://npm.pkg.github.com/@cantabar" >> .npmrc
-    - run: npm publish $(ls *.tgz)
+        scope: "@Cantabar"
+    - name: Install Yarn
+      run: npm install -g yarn
+    - run: echo "registry=https://npm.pkg.github.com/@Cantabar" >> .npmrc
+    - run: yarn publish $(ls *.tgz)
       env:
         NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
