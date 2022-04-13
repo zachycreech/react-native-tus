@@ -1,5 +1,5 @@
 {
-  "name": "react-native-tus",
+  "name": "@Cantabar/react-native-tus",
   "version": "0.1.0",
   "description": "Native TUS implementation for React Native",
   "main": "lib/commonjs/index",
@@ -46,6 +46,9 @@
     "url": "https://github.com/zachywheeler/react-native-tus/issues"
   },
   "homepage": "https://github.com/zachywheeler/react-native-tus#readme",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
   "devDependencies": {
     "@commitlint/config-conventional": "^11.0.0",
     "@react-native-community/eslint-config": "^2.0.0",
