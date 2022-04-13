@@ -46,9 +46,6 @@
     "url": "https://github.com/zachywheeler/react-native-tus/issues"
   },
   "homepage": "https://github.com/zachywheeler/react-native-tus#readme",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  },
   "devDependencies": {
     "@commitlint/config-conventional": "^11.0.0",
     "@react-native-community/eslint-config": "^2.0.0",
