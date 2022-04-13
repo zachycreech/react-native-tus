@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { StyleSheet, View, Text, Button, Image, ScrollView } from 'react-native';
-import { Upload, startAll } from 'react-native-tus-native';
+import { Upload, startAll } from 'react-native-tus';
 
 import * as ImagePicker from 'react-native-image-picker';
 

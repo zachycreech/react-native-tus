@@ -9,7 +9,7 @@ target 'TusNativeExample' do
   use_react_native!(:path => config["reactNativePath"])
 
   pod 'TUSKit', :path => '../../../TUSKit'
-  pod 'react-native-tus-native', :path => '../..'
+  pod 'react-native-tus', :path => '../..'
 
   # Enables Flipper.
   #

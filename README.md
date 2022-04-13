@@ -1,21 +1,18 @@
-# react-native-tus-native
+# react-native-tus
 
 Native TUS implementation for React Native
 
 ## Installation
 
 ```sh
-npm install react-native-tus-native
+npm install react-native-tus
 ```
 
 ## Usage
 
 ```js
-import { multiply } from "react-native-tus-native";
+import { Upload } from "react-native-tus";
 
-// ...
-
-const result = await multiply(3, 7);
 ```
 
 ## Contributing

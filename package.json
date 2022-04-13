@@ -1,5 +1,5 @@
 {
-  "name": "react-native-tus-native",
+  "name": "react-native-tus",
   "version": "0.1.0",
   "description": "Native TUS implementation for React Native",
   "main": "lib/commonjs/index",
@@ -13,7 +13,7 @@
     "android",
     "ios",
     "cpp",
-    "react-native-tus-native.podspec",
+    "react-native-tus.podspec",
     "!lib/typescript/example",
     "!android/build",
     "!ios/build",
@@ -36,13 +36,13 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/zachywheeler/react-native-tus-client",
+  "repository": "https://github.com/zachywheeler/react-native-tus",
   "author": "Daniel Jones <daniel.jones@scanifly.com> (https://scanifly.com/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/zachywheeler/react-native-tus-client/issues"
+    "url": "https://github.com/zachywheeler/react-native-tus/issues"
   },
-  "homepage": "https://github.com/zachywheeler/react-native-tus-client#readme",
+  "homepage": "https://github.com/zachywheeler/react-native-tus#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

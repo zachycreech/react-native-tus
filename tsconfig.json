@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "react-native-tus-native": ["./src/index"]
+      "react-native-tus": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
