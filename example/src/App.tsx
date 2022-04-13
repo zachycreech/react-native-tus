@@ -5,35 +5,16 @@ import {
   Button,
   Image,
   ScrollView,
-  Text,
 } from 'react-native';
 import * as ImagePicker from 'react-native-image-picker';
 import { DataTable } from 'react-native-paper';
 import TusUpload, { Upload, startAll } from 'react-native-tus';
 
-TusUpload.events.addUploadStartedListener((param) =>
-  console.log('Upload Started: ', param)
-);
-TusUpload.events.addUploadFinishedListener((param) =>
-  console.log('Upload Finished: ', param)
-);
-TusUpload.events.addUploadFailedListener((param) =>
-  console.log('Upload Failed: ', param)
-);
-TusUpload.events.addFileErrorListener((param) =>
-  console.log('File Error: ', param)
-);
-TusUpload.events.addTotalProgressListener((param) =>
-  console.log('Total Progress: ', param)
-);
-TusUpload.events.addProgressForListener((param) =>
-  console.log('Progress For: ', param)
-);
+
 
 export default function App() {
-  const [uploadResult, setUploadResult] = React.useState<any>([]);
+  const [uploadResult, setUploadResult] = React.useState<any>({});
   const [imageResponse, setImageResponse] = React.useState<any>();
-  const [pendingUploads, setPendingUploads] = React.useState<any>([]);
 
   // const exampleUpload = new Upload(  );
   React.useEffect(() => {
@@ -51,19 +32,56 @@ export default function App() {
       },
       // endpoint: 'http://0.0.0.0:1080/files/',
       endpoint: 'http://18.237.215.6:1080/files/',
-      onSuccess: (uploadId: string) =>
-        setUploadResult((oldUploadResult: Array<string>) => [
-          ...oldUploadResult,
-          uploadId,
-        ]),
     };
     for( let x = 0; x < 1; x += 1 ) {
       const tusUpload = new Upload(firstImage?.uri, uploadOptions);
       tusUpload.start();
     }
-    const remainingUploads = startAll();
-    setPendingUploads(async () => await remainingUploads);
+    startAll();
   }, [imageResponse]);
+
+  TusUpload.events.addUploadStartedListener((param) =>
+    setUploadResult((oldResult: any) => {
+      const { uploadId } = param;
+      let newResult = oldResult;
+      newResult[uploadId] = {
+        uploadId,
+        status: 'Started',
+      };
+      return newResult;
+    })
+  );
+  TusUpload.events.addUploadFinishedListener((param) =>
+    setUploadResult((oldResult: any) => {
+      const { uploadId } = param;
+      let newResult = oldResult;
+      newResult[uploadId] = {
+        uploadId,
+        status: 'Finished',
+      };
+      return newResult;
+    })
+  );
+  TusUpload.events.addUploadFailedListener((param) =>
+    setUploadResult((oldResult: any) => {
+      const { uploadId } = param;
+      let newResult = oldResult;
+      newResult[uploadId] = {
+        uploadId,
+        status: 'Failed',
+      };
+      return newResult;
+    })
+  );
+  TusUpload.events.addFileErrorListener((param) =>
+    console.log('File Error: ', param)
+  );
+  TusUpload.events.addTotalProgressListener((param) =>
+    console.log('Total Progress: ', param)
+  );
+  TusUpload.events.addProgressForListener((param) =>
+    console.log('Progress For: ', param)
+  );
 
   const pickerOptions: ImagePicker.ImageLibraryOptions = {
     selectionLimit: 1,
@@ -97,10 +115,14 @@ export default function App() {
             <DataTable.Title style={styles.idColumn}>Upload ID</DataTable.Title>
             <DataTable.Title style={styles.statusColumn} numeric>Status</DataTable.Title>
           </DataTable.Header>
-          {uploadResult.map((result: string, key: number) => (
-            <DataTable.Row key={key}>
-              <DataTable.Cell style={styles.idColumn}>{result}</DataTable.Cell>
-              <DataTable.Cell style={styles.statusColumn} numeric>???</DataTable.Cell>
+          {Object.keys(uploadResult).map((resultKey: string) => (
+            <DataTable.Row key={resultKey}>
+              <DataTable.Cell style={styles.idColumn}>
+                {uploadResult[resultKey].uploadId}
+              </DataTable.Cell>
+              <DataTable.Cell style={styles.statusColumn} numeric>
+                {uploadResult[resultKey].status}
+              </DataTable.Cell>
             </DataTable.Row>
           ))}
         </DataTable>
@@ -129,9 +151,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'snow',
   },
   idColumn: {
-    flex: 6,
+    flex: 5,
   },
   statusColumn: {
-    flex: 1,
+    flex: 2,
   },
 });
