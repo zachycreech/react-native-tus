@@ -34,7 +34,7 @@ jobs:
       - run: yarn install --frozen-lockfile
       - run: yarn pack
       - name: Upload
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: package
           path: "*.tgz"
@@ -44,8 +44,8 @@ jobs:
     runs-on: ubuntu-18.04
     if: github.repository_owner == 'Cantabar'
     steps:
-    - name: Upload
-      uses: actions/download-artifact@v2
+    - name: Download
+      uses: actions/download-artifact@v3
       with:
           name: package
     - uses: actions/setup-node@v3
@@ -53,6 +53,8 @@ jobs:
         node-version: 16.x
         registry-url: https://npm.pkg.github.com/
         scope: "@Cantabar"
+    - name: List available files
+      run: ls -la
     - name: Install Yarn
       run: npm install -g yarn
     - run: echo "registry=https://npm.pkg.github.com/@Cantabar" >> .npmrc
