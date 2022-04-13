@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  StyleSheet,
-  View,
-  Button,
-  Image,
-  ScrollView,
-} from 'react-native';
+import { StyleSheet, View, Button, Image, ScrollView } from 'react-native';
 import * as ImagePicker from 'react-native-image-picker';
 import { DataTable } from 'react-native-paper';
 import TusUpload, { Upload } from 'react-native-tus';
@@ -131,7 +125,7 @@ export default function App() {
             <Image
               resizeMode="cover"
               resizeMethod="scale"
-              style={{ width: 200, height: 200 }}
+              style={styles.imageSize}
               source={{ uri: uri }}
             />
           </View>
@@ -140,7 +134,9 @@ export default function App() {
         <DataTable style={styles.table}>
           <DataTable.Header>
             <DataTable.Title style={styles.idColumn}>Upload ID</DataTable.Title>
-            <DataTable.Title style={styles.statusColumn} numeric>Status</DataTable.Title>
+            <DataTable.Title style={styles.statusColumn} numeric>
+              Status
+            </DataTable.Title>
           </DataTable.Header>
           {Object.keys(uploadResult).map((resultKey: string) => (
             <DataTable.Row key={resultKey}>
@@ -163,6 +159,10 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'stretch',
     justifyContent: 'center',
+  },
+  imageSize: {
+    width: 200,
+    height: 200,
   },
   box: {
     width: 60,
