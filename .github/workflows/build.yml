@@ -53,11 +53,6 @@ jobs:
         node-version: 16.x
         registry-url: https://npm.pkg.github.com/
         scope: "@Cantabar"
-    - name: List available files
-      run: ls *.tgz
-    - name: Install Yarn
-      run: npm install -g yarn
-    - run: echo "registry=https://npm.pkg.github.com/@Cantabar" >> .npmrc
     - run: npm publish $(ls *.tgz)
       env:
         NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
