@@ -53,6 +53,7 @@ jobs:
         node-version: 16.x
         registry-url: https://npm.pkg.github.com/
         scope: "@Cantabar"
+        always-auth: true
     - run: npm publish $(ls *.tgz)
       env:
         NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}

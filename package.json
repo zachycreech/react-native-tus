@@ -36,7 +36,10 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/zachywheeler/react-native-tus",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Cantabar/react-native-tus"
+  },
   "author": "Daniel Jones <daniel.jones@scanifly.com> (https://scanifly.com/)",
   "license": "MIT",
   "bugs": {
@@ -44,7 +47,7 @@
   },
   "homepage": "https://github.com/zachywheeler/react-native-tus#readme",
   "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
+    "registry": "https://npm.pkg.github.com/"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^11.0.0",
