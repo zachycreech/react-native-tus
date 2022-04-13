@@ -1,5 +1,5 @@
 {
-  "name": "@Cantabar/react-native-tus",
+  "name": "@zachywheeler/react-native-tus",
   "version": "0.1.0",
   "description": "Native TUS implementation for React Native",
   "main": "lib/commonjs/index",
@@ -38,9 +38,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Cantabar/react-native-tus"
+    "url": "https://github.com/zachywheeler/react-native-tus"
   },
-  "author": "Daniel Jones <daniel.jones@scanifly.com> (https://scanifly.com/)",
+  "contributors": [
+    "Daniel Jones <daniel.jones@scanifly.com> (https://scanifly.com/)",
+    "Zach Wheeler <zach.wheeler@scanifly.com> (https://scanifly.com/)"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/zachywheeler/react-native-tus/issues"

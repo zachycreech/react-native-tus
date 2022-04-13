@@ -42,7 +42,7 @@ jobs:
     name: "Publish to GitHub Packages"
     needs: [package]
     runs-on: ubuntu-18.04
-    if: github.repository_owner == 'Cantabar'
+    if: github.repository_owner == 'zachywheeler'
     steps:
     - name: Download
       uses: actions/download-artifact@v3
@@ -52,7 +52,7 @@ jobs:
       with:
         node-version: 16.x
         registry-url: https://npm.pkg.github.com/
-        scope: "@Cantabar"
+        scope: "@zachywheeler"
         always-auth: true
     - run: npm publish $(ls *.tgz)
       env:
