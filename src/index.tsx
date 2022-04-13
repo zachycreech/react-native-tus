@@ -7,7 +7,9 @@ import type {
 } from './types';
 
 type Options = {
-  metadata: {};
+  metadata: {
+    name?: string;
+  };
   headers: {};
   endpoint: string;
   storageDir: string;
@@ -103,7 +105,7 @@ export class Upload {
     const previousUploads = await getRemainingUploads();
     return previousUploads
       ? previousUploads.filter(
-          (upload) =>
+          (upload: { context?: { metadata?: { name?: string } } }) =>
             upload?.context?.metadata?.name === this.options?.metadata?.name
         )
       : [];
@@ -164,4 +166,4 @@ export class Upload {
   }
 }
 
-export default { Upload };
+export default { Upload, events };

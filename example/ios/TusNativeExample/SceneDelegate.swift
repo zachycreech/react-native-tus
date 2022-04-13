@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import SwiftUI
 import React
-import react_native_tus_native
+import react_native_tus
 
 @available(iOS 13, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {

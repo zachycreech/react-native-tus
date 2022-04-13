@@ -1,9 +1,33 @@
 import * as React from 'react';
-
-import { StyleSheet, View, Text, Button, Image, ScrollView } from 'react-native';
-import { Upload, startAll } from 'react-native-tus';
-
+import {
+  StyleSheet,
+  View,
+  Text,
+  Button,
+  Image,
+  ScrollView,
+} from 'react-native';
 import * as ImagePicker from 'react-native-image-picker';
+import TusUpload, { Upload, startAll } from 'react-native-tus';
+
+TusUpload.events.addUploadStartedListener((param) =>
+  console.log('Upload Started: ', param)
+);
+TusUpload.events.addUploadFinishedListener((param) =>
+  console.log('Upload Finished: ', param)
+);
+TusUpload.events.addUploadFailedListener((param) =>
+  console.log('Upload Failed: ', param)
+);
+TusUpload.events.addFileErrorListener((param) =>
+  console.log('File Error: ', param)
+);
+TusUpload.events.addTotalProgressListener((param) =>
+  console.log('Total Progress: ', param)
+);
+TusUpload.events.addProgressForListener((param) =>
+  console.log('Progress For: ', param)
+);
 
 export default function App() {
   const [uploadResult, setUploadResult] = React.useState<any>([]);
