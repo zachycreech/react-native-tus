@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { StyleSheet, View, Button, Image, ScrollView } from 'react-native';
+import { StyleSheet, View, Button, Image, ScrollView, SafeAreaView } from 'react-native';
 import * as ImagePicker from 'react-native-image-picker';
 import { DataTable } from 'react-native-paper';
-import TusUpload, { Upload } from 'react-native-tus';
+import TusUpload, { Upload } from '@zachywheeler/react-native-tus';
 
 export default function App() {
   const [uploadResult, setUploadResult] = React.useState<any>({});
@@ -112,7 +112,7 @@ export default function App() {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Button
         title="open picker for single file selection"
         onPress={async () => {
@@ -150,7 +150,7 @@ export default function App() {
           ))}
         </DataTable>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 

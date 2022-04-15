@@ -1,5 +1,13 @@
-#import <React/RCTBridgeModule.h>
-#import <React/RCTEventEmitter.h>
+#import "TusNative.h"
+#import "react_native_tus-Swift.h"
+
+@implementation RNTusClientBridgeInstanceHolder
+
++ (void)initializeBackgroundClient {
+  [[RNTusClientInstanceHolder sharedInstance] initializeBackgroundClient];
+}
+
+@end
 
 @interface RCT_EXTERN_MODULE(TusNative, RCTEventEmitter)
 
