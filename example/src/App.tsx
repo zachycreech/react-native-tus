@@ -1,8 +1,15 @@
 import * as React from 'react';
-import { StyleSheet, View, Button, Image, ScrollView, SafeAreaView } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Button,
+  Image,
+  ScrollView,
+  SafeAreaView,
+} from 'react-native';
 import * as ImagePicker from 'react-native-image-picker';
-import { DataTable } from 'react-native-paper';
-import TusUpload, { Upload } from '@zachywheeler/react-native-tus';
+import {DataTable} from 'react-native-paper';
+import TusUpload, {Upload} from '@zachywheeler/react-native-tus';
 
 export default function App() {
   const [uploadResult, setUploadResult] = React.useState<any>({});
@@ -34,50 +41,50 @@ export default function App() {
   React.useEffect(() => {
     let listeners: EventSubscription[] = [];
     const uploadStartedListener = TusUpload.events.addUploadStartedListener(
-      (param) => {
+      param => {
         // console.log(`Upload started: `, param);
-        const { uploadId } = param;
+        const {uploadId} = param;
         setUploadResult((oldResult: any) => {
-          let newResult = { ...oldResult };
+          let newResult = {...oldResult};
           newResult[uploadId] = {
             uploadId,
             status: 'Started',
           };
           return newResult;
         });
-      }
+      },
     );
     listeners.push(uploadStartedListener);
 
     const uploadFinishedListener = TusUpload.events.addUploadFinishedListener(
-      (param) => {
+      param => {
         // console.log(`Upload started: `, param);
-        const { uploadId } = param;
+        const {uploadId} = param;
         setUploadResult((oldResult: any) => {
-          let newResult = { ...oldResult };
+          let newResult = {...oldResult};
           newResult[uploadId] = {
             uploadId,
             status: 'Finished',
           };
           return newResult;
         });
-      }
+      },
     );
     listeners.push(uploadFinishedListener);
 
     const uploadFailedListener = TusUpload.events.addUploadFailedListener(
-      (param) => {
+      param => {
         // console.log(`Upload started: `, param);
-        const { uploadId } = param;
+        const {uploadId} = param;
         setUploadResult((oldResult: any) => {
-          let newResult = { ...oldResult };
+          let newResult = {...oldResult};
           newResult[uploadId] = {
             uploadId,
             status: 'Failed',
           };
           return newResult;
         });
-      }
+      },
     );
     listeners.push(uploadFailedListener);
 
@@ -101,7 +108,7 @@ export default function App() {
     // );
     // listeners.push(progressForListener);
 
-    return () => listeners.forEach((listener) => listener.remove());
+    return () => listeners.forEach(listener => listener.remove());
   }, []);
 
   const pickerOptions: ImagePicker.ImageLibraryOptions = {
@@ -120,13 +127,13 @@ export default function App() {
         }}
       />
       {imageResponse?.assets &&
-        imageResponse?.assets.map(({ uri }) => (
+        imageResponse?.assets.map(({uri}) => (
           <View key={uri} style={styles.image}>
             <Image
               resizeMode="cover"
               resizeMethod="scale"
               style={styles.imageSize}
-              source={{ uri: uri }}
+              source={{uri: uri}}
             />
           </View>
         ))}
