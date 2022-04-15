@@ -284,7 +284,7 @@ PODS:
     - glog
   - react-native-image-picker (4.7.3):
     - React-Core
-  - react-native-tus (0.1.0):
+  - react-native-tus (0.1.1):
     - React-Core
     - TUSKit
   - React-perflogger (0.68.0)
@@ -544,7 +544,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 90f0bfd5d04e0b066c29216a110ffb9a6c34f23f
   React-logger: 8474fefa09d05f573a13c044cb0dfd751d4e52e3
   react-native-image-picker: 4e6008ad8c2321622affa2c85432a5ebd02d480c
-  react-native-tus: 024ddff9b23d889c2e33a9321789768502695499
+  react-native-tus: fe983291e6422b7b447076518bf048b53cd11ad6
   React-perflogger: 15cb741d6c2379f4d3fc8f9e4d4e1110ef3020cb
   React-RCTActionSheet: ea9099db0597bd769430db1e2d011fd5fdb7fc5e
   React-RCTAnimation: 252df4749866f2654f37612f839522cac91c1165
