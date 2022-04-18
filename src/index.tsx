@@ -7,10 +7,8 @@ import type {
 } from './types';
 
 type Options = {
-  metadata: {
-    name?: string;
-  };
-  headers: {};
+  metadata: unknown;
+  headers: unknown;
   endpoint: string;
   storageDir: string;
   onSuccess?: (uploadId: string) => void;
