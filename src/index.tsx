@@ -10,7 +10,6 @@ type Options = {
   metadata: unknown;
   headers: unknown;
   endpoint: string;
-  storageDir: string;
   onSuccess?: (uploadId: string) => void;
   onProgress?: (bytesUploaded: number, bytesTotal: number) => void;
   onError?: (error: Error | unknown) => void;
@@ -72,6 +71,14 @@ export class Upload {
       this.uploadId = await TusNative.createUpload(this.file, settings);
 
       this.subscribe();
+    } catch (err) {
+      this.emitError(err);
+    }
+  }
+
+  async abort() {
+    try {
+      TusNative.cancelById(this.uploadId);
     } catch (err) {
       this.emitError(err);
     }
