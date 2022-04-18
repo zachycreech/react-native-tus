@@ -13,24 +13,40 @@ public final class RNTusClientInstanceHolder : NSObject {
   public static let sharedInstance = RNTusClientInstanceHolder()
 
   public var tusClient: TUSClient?
-  
+
   public func initializeBackgroundClient() {
     print( "initializing BG Client")
     if tusClient == nil {
+      let sessionId = "TUS BG Session"
+
+      // TODO: See if Background URL Session support can be added to TUSKit
+      // let bgUrlSessionConfig = URLSessionConfiguration.background(withIdentifier: sessionId)
+      // bgUrlSessionConfig.isDiscretionary = false
+      // let bgUrlSession = URLSession(configuration: bgUrlSessionConfig)
+
       let tusClient = try! TUSClient(
         server: URL(string: "http://localhost/files")!,
-        sessionIdentifier: "TUS BG Session",
+        sessionIdentifier: sessionId,
         storageDirectory: URL(string: "TUS/background")!
       )
   #if DEBUG
       try! tusClient.reset()
   #endif
+
       if #available(iOS 13, *) {
         print("TUSClient attempting to schedule background tasks")
         tusClient.scheduleBackgroundTasks()
+
       }
 
       RNTusClientInstanceHolder.sharedInstance.tusClient = tusClient
+    }
+  }
+
+  public func scheduleBackgroundTasks() {
+    if #available(iOS 13, *) {
+      print("TUSClient attempting to schedule background tasks")
+      RNTusClientInstanceHolder.sharedInstance.tusClient!.scheduleBackgroundTasks()
     }
   }
 }

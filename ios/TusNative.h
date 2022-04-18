@@ -3,4 +3,5 @@
 
 @interface RNTusClientBridgeInstanceHolder : NSObject
 + (void)initializeBackgroundClient;
++ (void)scheduleBackgroundTasks;
 @end

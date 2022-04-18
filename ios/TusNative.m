@@ -7,6 +7,10 @@
   [[RNTusClientInstanceHolder sharedInstance] initializeBackgroundClient];
 }
 
++ (void)scheduleBackgroundTasks {
+  [[RNTusClientInstanceHolder sharedInstance] scheduleBackgroundTasks];
+}
+
 @end
 
 @interface RCT_EXTERN_MODULE(TusNative, RCTEventEmitter)
