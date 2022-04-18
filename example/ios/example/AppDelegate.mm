@@ -35,7 +35,7 @@
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   [RNTusClientBridgeInstanceHolder initializeBackgroundClient];
-  
+
 #if RCT_NEW_ARCH_ENABLED
   _contextContainer = std::make_shared<facebook::react::ContextContainer const>();
   _reactNativeConfig = std::make_shared<facebook::react::EmptyReactNativeConfig const>();
@@ -67,6 +67,11 @@
 #else
   return [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 #endif
+}
+
+- (void)applicationDidEnterBackground:(UIApplication *)application
+{
+  [RNTusClientBridgeInstanceHolder scheduleBackgroundTasks];
 }
 
 #if RCT_NEW_ARCH_ENABLED

@@ -24,11 +24,33 @@ react-native link react-native-tus
 
 #### iOS setup
 
-Call the Tus Client initialization singleton from your AppDelegate
+Add Background Processing capability and Background Scheduler Permitted Identifier to Info.plist
 
 ```
+<key>BGTaskSchedulerPermittedIdentifiers</key>
+<array>
+  <string>io.tus.uploading</string>
+</array>
+<key>UIBackgroundModes</key>
+<array>
+  <string>processing</string>
+</array>
+```
+
+
+Call the Tus Client initialization singleton from your AppDelegate. There is some flexibility regarding where you initialize this. The main concern is that the client gets initialized at or around launch time and NOT when React Native lazy loads the module.
 
 ```
+#import "TusNative.h"
+
+@implementation AppDelegate
+
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+  [RNTusClientBridgeInstanceHolder initializeBackgroundClient];
+}
+```
+
 
 ## Usage
 

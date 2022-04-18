@@ -32,7 +32,7 @@ export default function App() {
       // endpoint: 'http://0.0.0.0:1080/files/',
       endpoint: 'http://18.237.215.6:1080/files/',
     };
-    for (let x = 0; x < 100; x += 1) {
+    for (let x = 0; x < 10; x += 1) {
       const tusUpload = new Upload(firstImage?.uri, uploadOptions);
       tusUpload.start();
     }
