@@ -23,12 +23,12 @@ export default function App() {
     if (!imageResponse) {
       return;
     }
-    RNFS.readDir(RNFS.DocumentDirectoryPath).then((documentDir) => {
-      // console.log(JSON.stringify(documentDir, null, 2));
-      documentDir.forEach((document) => {
+    RNFS.readDir(RNFS.DocumentDirectoryPath).then(documentDir => {
+      console.log(JSON.stringify(documentDir, null, 2));
+      documentDir.forEach(document => {
         if (document.isDirectory()) {
-          RNFS.readDir(document.path).then((childDir) => {
-            // console.log(JSON.stringify(childDir, null, 2));
+          RNFS.readDir(document.path).then(childDir => {
+            console.log(JSON.stringify(childDir, null, 2));
           });
         }
       });
@@ -46,7 +46,7 @@ export default function App() {
     console.log(JSON.stringify(imageResponse, null, 2));
     asyncBatch(
       imageResponse,
-      async (image) => {
+      async image => {
         if (await RNFS.exists(image.uri)) {
           const tusUpload = new Upload(image.uri, uploadOptions);
           return tusUpload.start();
@@ -147,7 +147,7 @@ export default function App() {
         style={styles.button}
         title="open Image picker for single file selection"
         onPress={async () => {
-          ImagePicker.launchImageLibrary(pickerOptions, (response) => {
+          ImagePicker.launchImageLibrary(pickerOptions, response => {
             setImageResponse(response.assets);
           });
         }}
@@ -156,12 +156,17 @@ export default function App() {
         style={styles.button}
         title="open Document picker for multiple file selection"
         onPress={async () => {
-          const response = await DocumentPicker.pickMultiple(documentPickerOptions);
-          const mappedResponse = response.map((image) => ({uri: image.fileCopyUri}))
+          const response = await DocumentPicker.pickMultiple(
+            documentPickerOptions,
+          );
+          const mappedResponse = response.map(image => ({
+            uri: image.fileCopyUri,
+          }));
           setImageResponse(mappedResponse);
         }}
       />
-      {imageResponse && false &&
+      {imageResponse &&
+        false &&
         imageResponse.map(({uri}) => (
           <View key={uri} style={styles.image}>
             <Image
