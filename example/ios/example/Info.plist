@@ -45,6 +45,7 @@
 	<string>Example app needs permission to access Photo Library</string>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>fetch</string>
 		<string>processing</string>
 	</array>
 	<key>UILaunchStoryboardName</key>

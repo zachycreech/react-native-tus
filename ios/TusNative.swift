@@ -48,13 +48,17 @@ class TusNative: RCTEventEmitter {
     let headers = options["headers"]! as? [String: String] ?? [:]
     let metadata = options["metadata"]! as? [String: String] ?? [:]
 
-    let uploadId = try! tusClient.uploadFileAt(
-      filePath: fileToBeUploaded,
-      uploadURL: URL(string: endpoint)!,
-      customHeaders: headers,
-      context: metadata
-    )
-    resolve( "\(uploadId)" )
+    do {
+      let uploadId = try! tusClient.uploadFileAt(
+        filePath: fileToBeUploaded,
+        uploadURL: URL(string: endpoint)!,
+        customHeaders: headers,
+        context: metadata
+      )
+      resolve( "\(uploadId)" )
+    } catch {
+      reject("UPLOAD_ERROR", "Unable to create upload", error)
+    }
   }
 
   @objc(startAll:rejecter:)

@@ -7,8 +7,11 @@ import {
   ScrollView,
   SafeAreaView,
 } from 'react-native';
+import asyncBatch from 'async-batch';
 import * as ImagePicker from 'react-native-image-picker';
+import DocumentPicker from 'react-native-document-picker';
 import {DataTable} from 'react-native-paper';
+import RNFS from 'react-native-fs';
 import TusUpload, {Upload} from '@zachywheeler/react-native-tus';
 
 export default function App() {
@@ -20,8 +23,16 @@ export default function App() {
     if (!imageResponse) {
       return;
     }
-    console.log(JSON.stringify(imageResponse, null, 2));
-    const firstImage = imageResponse?.assets && imageResponse.assets[0];
+    RNFS.readDir(RNFS.DocumentDirectoryPath).then((documentDir) => {
+      // console.log(JSON.stringify(documentDir, null, 2));
+      documentDir.forEach((document) => {
+        if (document.isDirectory()) {
+          RNFS.readDir(document.path).then((childDir) => {
+            // console.log(JSON.stringify(childDir, null, 2));
+          });
+        }
+      });
+    });
     const uploadOptions = {
       metadata: {
         name: 'example-name',
@@ -32,10 +43,17 @@ export default function App() {
       // endpoint: 'http://0.0.0.0:1080/files/',
       endpoint: 'http://18.237.215.6:1080/files/',
     };
-    for (let x = 0; x < 1; x += 1) {
-      const tusUpload = new Upload(firstImage?.uri, uploadOptions);
-      tusUpload.start();
-    }
+    console.log(JSON.stringify(imageResponse, null, 2));
+    asyncBatch(
+      imageResponse,
+      async (image) => {
+        if (await RNFS.exists(image.uri)) {
+          const tusUpload = new Upload(image.uri, uploadOptions);
+          return tusUpload.start();
+        }
+      },
+      1,
+    );
   }, [imageResponse]);
 
   React.useEffect(() => {
@@ -118,16 +136,33 @@ export default function App() {
     includeExtra: true,
   };
 
+  const documentPickerOptions: any = {
+    type: DocumentPicker.types.images,
+    mode: 'import',
+    copyTo: 'documentDirectory',
+  };
   return (
     <SafeAreaView style={styles.container}>
       <Button
-        title="open picker for single file selection"
+        style={styles.button}
+        title="open Image picker for single file selection"
         onPress={async () => {
-          ImagePicker.launchImageLibrary(pickerOptions, setImageResponse);
+          ImagePicker.launchImageLibrary(pickerOptions, (response) => {
+            setImageResponse(response.assets);
+          });
         }}
       />
-      {imageResponse?.assets &&
-        imageResponse?.assets.map(({uri}) => (
+      <Button
+        style={styles.button}
+        title="open Document picker for multiple file selection"
+        onPress={async () => {
+          const response = await DocumentPicker.pickMultiple(documentPickerOptions);
+          const mappedResponse = response.map((image) => ({uri: image.fileCopyUri}))
+          setImageResponse(mappedResponse);
+        }}
+      />
+      {imageResponse && false &&
+        imageResponse.map(({uri}) => (
           <View key={uri} style={styles.image}>
             <Image
               resizeMode="cover"
@@ -166,6 +201,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'stretch',
     justifyContent: 'center',
+  },
+  button: {
+    padding: 20,
   },
   imageSize: {
     width: 200,
