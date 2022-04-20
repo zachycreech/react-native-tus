@@ -1,6 +1,6 @@
 {
   "name": "@zachywheeler/react-native-tus",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Native TUS implementation for React Native",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
