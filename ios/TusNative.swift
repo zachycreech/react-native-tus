@@ -43,10 +43,6 @@ class TusNative: RCTEventEmitter {
 
   @objc(createUpload:options:resolver:rejecter:)
   func createUpload(fileUrl: String, options: [String : Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-    if !FileManager().fileExists(atPath: fileUrl) {
-      reject("FILE_ERROR", "File does not exist at \(fileUrl)", nil)
-      return
-    }
     let fileToBeUploaded:URL = URL(string: fileUrl)!
     let endpoint: String = options["endpoint"]! as? String ?? ""
     let headers = options["headers"]! as? [String: String] ?? [:]
