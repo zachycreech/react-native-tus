@@ -49,7 +49,7 @@ class TusNative: RCTEventEmitter {
     let metadata = options["metadata"]! as? [String: String] ?? [:]
 
     do {
-      let uploadId = try! tusClient.uploadFileAt(
+      let uploadId = try tusClient.uploadFileAt(
         filePath: fileToBeUploaded,
         uploadURL: URL(string: endpoint)!,
         customHeaders: headers,
