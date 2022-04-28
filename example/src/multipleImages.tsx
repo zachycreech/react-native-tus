@@ -31,7 +31,6 @@ const getRelativePath = (absolutePath: string) => {
   } else {
     throw new Error('fileUtils.getRelativePath not implemeneted');
   }
-
 };
 
 export default function App() {
@@ -69,7 +68,10 @@ export default function App() {
       async image => {
         if (await RNFS.exists(image.uri)) {
           // const tusUpload = new Upload(image.uri, uploadOptions);
-          const tusUpload = new Upload(getRelativePath(image.uri), uploadOptions);
+          const tusUpload = new Upload(
+            getRelativePath(image.uri),
+            uploadOptions,
+          );
           return tusUpload.start();
         }
       },
