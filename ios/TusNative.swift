@@ -43,7 +43,16 @@ class TusNative: RCTEventEmitter {
 
   @objc(createUpload:options:resolver:rejecter:)
   func createUpload(fileUrl: String, options: [String : Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-    let fileToBeUploaded:URL = URL(string: fileUrl)!
+    let fileToBeUploaded: URL
+    if (fileUrl.starts(with: "file:///") || fileUrl.starts(with: "/var/") || fileUrl.starts(with: "/private/var/")) {
+      fileToBeUploaded = URL(string: fileUrl)!
+    } else {
+      let fileManager = FileManager.default
+      let docUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+      let appContainer = docUrl.deletingLastPathComponent()
+      fileToBeUploaded = appContainer.appendingPathComponent(fileUrl)
+    }
+
     let endpoint: String = options["endpoint"]! as? String ?? ""
     let headers = options["headers"]! as? [String: String] ?? [:]
     let metadata = options["metadata"]! as? [String: String] ?? [:]
@@ -57,6 +66,7 @@ class TusNative: RCTEventEmitter {
       )
       resolve( "\(uploadId)" )
     } catch {
+      print("Unable to create upload: \(error)")
       reject("UPLOAD_ERROR", "Unable to create upload", error)
     }
   }
