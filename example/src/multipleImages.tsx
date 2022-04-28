@@ -14,6 +14,26 @@ import {DataTable} from 'react-native-paper';
 import RNFS from 'react-native-fs';
 import TusUpload, {Upload} from '@zachywheeler/react-native-tus';
 
+/**
+ * Given an absolute path returns relative path (remaining path after application ID)
+ */
+const getRelativePath = (absolutePath: string) => {
+  if (Platform.OS === 'ios') {
+    //console.log('Absolute path: ' + absolutePath);
+    const splitVals = absolutePath.split('/');
+    const postAppIdIndex = splitVals.indexOf('Application') + 2;
+    let relativePath = '';
+    for (let i = postAppIdIndex; i < splitVals.length; i++) {
+      relativePath += `/${splitVals[i]}`;
+    }
+    //console.log('Relative path: ' + relativePath);
+    return relativePath;
+  } else {
+    throw new Error('fileUtils.getRelativePath not implemeneted');
+  }
+
+};
+
 export default function App() {
   const [uploadResult, setUploadResult] = React.useState<any>({});
   const [imageResponse, setImageResponse] = React.useState<any>();
@@ -23,16 +43,16 @@ export default function App() {
     if (!imageResponse) {
       return;
     }
-    RNFS.readDir(RNFS.DocumentDirectoryPath).then(documentDir => {
-      console.log(JSON.stringify(documentDir, null, 2));
-      documentDir.forEach(document => {
-        if (document.isDirectory()) {
-          RNFS.readDir(document.path).then(childDir => {
-            console.log(JSON.stringify(childDir, null, 2));
-          });
-        }
-      });
-    });
+    // RNFS.readDir(RNFS.DocumentDirectoryPath).then(documentDir => {
+    //   console.log(JSON.stringify(documentDir, null, 2));
+    //   documentDir.forEach(document => {
+    //     if (document.isDirectory()) {
+    //       RNFS.readDir(document.path).then(childDir => {
+    //         console.log(JSON.stringify(childDir, null, 2));
+    //       });
+    //     }
+    //   });
+    // });
     const uploadOptions = {
       metadata: {
         name: 'example-name',
@@ -48,7 +68,8 @@ export default function App() {
       imageResponse,
       async image => {
         if (await RNFS.exists(image.uri)) {
-          const tusUpload = new Upload(image.uri, uploadOptions);
+          // const tusUpload = new Upload(image.uri, uploadOptions);
+          const tusUpload = new Upload(getRelativePath(image.uri), uploadOptions);
           return tusUpload.start();
         }
       },
