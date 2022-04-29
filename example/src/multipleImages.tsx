@@ -12,7 +12,10 @@ import * as ImagePicker from 'react-native-image-picker';
 import DocumentPicker from 'react-native-document-picker';
 import {DataTable} from 'react-native-paper';
 import RNFS from 'react-native-fs';
-import TusUpload, {Upload} from '@zachywheeler/react-native-tus';
+import TusUpload, {
+  Upload,
+  createMultipleUploads,
+} from '@zachywheeler/react-native-tus';
 
 /**
  * Given an absolute path returns relative path (remaining path after application ID)
@@ -68,11 +71,21 @@ export default function App() {
       async image => {
         if (await RNFS.exists(image.uri)) {
           // const tusUpload = new Upload(image.uri, uploadOptions);
+
           const tusUpload = new Upload(
             getRelativePath(image.uri),
             uploadOptions,
           );
-          return tusUpload.start();
+          tusUpload.start();
+          const uploadObject = {
+            fileUrl: getRelativePath(image.uri),
+            options: uploadOptions,
+          };
+          let uploadObjects = [];
+          for (let x = 0; x < 500; x += 1) {
+            uploadObjects.push(uploadObject);
+          }
+          await createMultipleUploads(uploadObjects);
         }
       },
       1,
