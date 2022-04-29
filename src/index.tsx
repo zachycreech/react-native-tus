@@ -101,9 +101,16 @@ export class Upload {
       console.log(new Error('tus: no endpoint provided'));
       return;
     }
-    (this.uploadId ? Promise.resolve() : this.createUpload()).catch((err) =>
-      console.log(err)
-    );
+    if (this.uploadId) {
+      return this.uploadId;
+    }
+
+    try {
+      await this.createUpload();
+    } catch (err) {
+      this.emitError(err);
+    }
+    return this.uploadId;
   }
 
   async findPreviousUploads() {
