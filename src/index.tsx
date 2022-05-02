@@ -49,7 +49,7 @@ export const retryById = (uploadId: string) => TusNative.retryById(uploadId);
 
 export const getFailedUploadIds = () => TusNative.getFailedUploadIds();
 
-export const createMultipleUploads = (uploads) =>
+export const createMultipleUploads = (uploads: [any]) =>
   TusNative.createMultipleUploads(uploads);
 
 export class Upload {
