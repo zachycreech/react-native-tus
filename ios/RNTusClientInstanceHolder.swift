@@ -28,7 +28,7 @@ public final class RNTusClientInstanceHolder : NSObject {
         server: URL(string: "http://localhost/files")!,
         sessionIdentifier: sessionId,
         storageDirectory: URL(string: "TUS/background")!,
-        chunkSize: 8 * 1024 * 1024
+        chunkSize: 5 * 1024 * 1024
       )
   #if DEBUG
       try! tusClient.reset()
