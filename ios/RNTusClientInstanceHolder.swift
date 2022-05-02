@@ -27,7 +27,8 @@ public final class RNTusClientInstanceHolder : NSObject {
       let tusClient = try! TUSClient(
         server: URL(string: "http://localhost/files")!,
         sessionIdentifier: sessionId,
-        storageDirectory: URL(string: "TUS/background")!
+        storageDirectory: URL(string: "TUS/background")!,
+        chunkSize: 5 * 1024 * 1024
       )
   #if DEBUG
       try! tusClient.reset()
@@ -36,7 +37,6 @@ public final class RNTusClientInstanceHolder : NSObject {
       if #available(iOS 13, *) {
         print("TUSClient attempting to schedule background tasks")
         tusClient.scheduleBackgroundTasks()
-
       }
 
       RNTusClientInstanceHolder.sharedInstance.tusClient = tusClient
