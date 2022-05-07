@@ -194,7 +194,7 @@ extension TusNative: TUSClientDelegate {
     let body: [String:String] = [
       "uploadId": "\(id)",
       "sessionId": "\(client.sessionIdentifier)",
-      "context": context
+      "context": context!
     ]
     sendEvent(withName: TusNative.uploadStartedEvent, body: body)
   }
@@ -209,7 +209,7 @@ extension TusNative: TUSClientDelegate {
       "uploadId": "\(id)",
       "url": "\(url)",
       "sessionId": "\(client.sessionIdentifier)",
-      "context": context
+      "context": context!
     ]
     sendEvent(withName: TusNative.uploadFinishedEvent, body: body)
   }
@@ -220,7 +220,7 @@ extension TusNative: TUSClientDelegate {
       "uploadId": "\(id)",
       "sessionId": "\(client.sessionIdentifier)",
       "error": error,
-      "context": context
+      "context": context!
     ]
     sendEvent(withName: TusNative.uploadFailedEvent, body: body)
   }
@@ -251,7 +251,7 @@ extension TusNative: TUSClientDelegate {
       "bytesUploaded": bytesUploaded,
       "totalBytes": totalBytes,
       "sessionId": "\(client.sessionIdentifier)",
-      "context": context
+      "context": context!
     ]
     sendEvent(withName: TusNative.progressForEvent, body: body)
   }
