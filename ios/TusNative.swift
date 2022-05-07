@@ -53,7 +53,7 @@ class TusNative: RCTEventEmitter {
     }
     return fileToBeUploaded
   }
-  
+
   @objc(createUpload:options:resolver:rejecter:)
   func createUpload(fileUrl: String, options: [String : Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
     let fileToBeUploaded: URL = buildFileUrl(fileUrl: fileUrl)
@@ -74,7 +74,7 @@ class TusNative: RCTEventEmitter {
       reject("UPLOAD_ERROR", "Unable to create upload", error)
     }
   }
-  
+
   @objc(createMultipleUploads:resolver:rejecter:)
   func createMultipleUploads(fileUploads: [[String: Any]], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
     var uploads: [[String:Any]] = []
@@ -193,7 +193,8 @@ extension TusNative: TUSClientDelegate {
 
     let body: [String:String] = [
       "uploadId": "\(id)",
-      "sessionId": "\(client.sessionIdentifier)"
+      "sessionId": "\(client.sessionIdentifier)",
+      "context": context
     ]
     sendEvent(withName: TusNative.uploadStartedEvent, body: body)
   }
@@ -207,7 +208,8 @@ extension TusNative: TUSClientDelegate {
     let body: [String:String] = [
       "uploadId": "\(id)",
       "url": "\(url)",
-      "sessionId": "\(client.sessionIdentifier)"
+      "sessionId": "\(client.sessionIdentifier)",
+      "context": context
     ]
     sendEvent(withName: TusNative.uploadFinishedEvent, body: body)
   }
@@ -217,7 +219,8 @@ extension TusNative: TUSClientDelegate {
     let body: [String:Any] = [
       "uploadId": "\(id)",
       "sessionId": "\(client.sessionIdentifier)",
-      "error": error
+      "error": error,
+      "context": context
     ]
     sendEvent(withName: TusNative.uploadFailedEvent, body: body)
   }
@@ -247,7 +250,8 @@ extension TusNative: TUSClientDelegate {
       "uploadId": "\(id)",
       "bytesUploaded": bytesUploaded,
       "totalBytes": totalBytes,
-      "sessionId": "\(client.sessionIdentifier)"
+      "sessionId": "\(client.sessionIdentifier)",
+      "context": context
     ]
     sendEvent(withName: TusNative.progressForEvent, body: body)
   }
