@@ -1,6 +1,11 @@
 import TusNative from './nativeBridge';
 import events from './events';
-import * as types from './types';
+import type {
+  UploadFinishedDataType,
+  UploadFailedDataType,
+  ProgressForDataType,
+  BatchUploadRequestItem,
+} from './types';
 
 type Options = {
   metadata: any;
@@ -146,7 +151,7 @@ export class Upload {
   subscribe() {
     this.subscriptions.push(
       events.addUploadFinishedListener(
-        ({ uploadId, url }: types.UploadFinishedDataType) => {
+        ({ uploadId, url }: UploadFinishedDataType) => {
           if (uploadId === this.uploadId) {
             this.url = url;
             this.onSuccess(uploadId);
@@ -157,7 +162,7 @@ export class Upload {
     );
     this.subscriptions.push(
       events.addUploadFailedListener(
-        ({ uploadId, error }: types.UploadFailedDataType) => {
+        ({ uploadId, error }: UploadFailedDataType) => {
           if (uploadId === this.uploadId) {
             this.onError(error);
           }
@@ -166,7 +171,7 @@ export class Upload {
     );
     this.subscriptions.push(
       events.addProgressForListener(
-        ({ uploadId, bytesUploaded, totalBytes }: types.ProgressForDataType) => {
+        ({ uploadId, bytesUploaded, totalBytes }: ProgressForDataType) => {
           if (uploadId === this.uploadId) {
             this.onProgress(bytesUploaded, totalBytes);
           }
@@ -180,4 +185,5 @@ export class Upload {
   }
 }
 
-export default { Upload, events, types };
+export * from './types';
+export default { Upload, events };
