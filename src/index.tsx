@@ -185,4 +185,4 @@ export class Upload {
   }
 }
 
-export default { Upload, events };
+export default { Upload, events, types };
