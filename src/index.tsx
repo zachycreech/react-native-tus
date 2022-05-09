@@ -15,6 +15,9 @@ type Options = {
   onError?: (error: Error | unknown) => void;
 };
 
+// events.addUploadInitializedListener((param) =>
+//   console.log('Upload Initialized: ', param)
+// );
 // events.addUploadStartedListener((param) =>
 //   console.log('Upload Started: ', param)
 // );

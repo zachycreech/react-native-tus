@@ -1,3 +1,12 @@
+export type UploadInitializedDataType = {
+  uploadId: string;
+  sessionId: string;
+  context?: any;
+};
+export type UploadInitializedListenerType = (
+  arg0: UploadInitializedDataType
+) => void;
+
 export type UploadStartedDataType = {
   uploadId: string;
   sessionId: string;

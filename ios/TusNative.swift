@@ -5,6 +5,7 @@ import UIKit
 
 @objc(TusNative)
 class TusNative: RCTEventEmitter {
+  static let uploadInitializedEvent = "UploadInitialized"
   static let uploadStartedEvent = "UploadStarted"
   static let uploadFinishedEvent = "UploadFinished"
   static let uploadFailedEvent = "UploadFailed"
@@ -22,6 +23,7 @@ class TusNative: RCTEventEmitter {
 
   override func supportedEvents() -> [String]! {
     return [
+      TusNative.uploadInitializedEvent,
       TusNative.uploadStartedEvent,
       TusNative.uploadFinishedEvent,
       TusNative.uploadFailedEvent,
@@ -187,6 +189,18 @@ class TusNative: RCTEventEmitter {
 }
 
 extension TusNative: TUSClientDelegate {
+  func didInitializeUpload(id: UUID, context: [String: String]?, client: TUSClient) {
+    print("TUSClient initialized upload, id is \(id)")
+    print("TUSClient remaining is \(client.remainingUploads)")
+
+    let body: [String:Any] = [
+      "uploadId": "\(id)",
+      "sessionId": "\(client.sessionIdentifier)",
+      "context": context!
+    ]
+    sendEvent(withName: TusNative.uploadInitializedEvent, body: body)
+  }
+
   func didStartUpload(id: UUID, context: [String: String]?, client: TUSClient) {
     print("TUSClient started upload, id is \(id)")
     print("TUSClient remaining is \(client.remainingUploads)")

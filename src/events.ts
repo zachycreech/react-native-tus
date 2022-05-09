@@ -1,5 +1,6 @@
 import { EVENTS } from './constants';
 import type {
+  UploadInitializedListenerType,
   UploadStartedListenerType,
   UploadFinishedListenerType,
   UploadFailedListenerType,
@@ -9,6 +10,13 @@ import type {
 } from './types';
 
 import { emitter } from './nativeBridge';
+
+/**
+ * Upload Initialized
+ */
+function addUploadInitializedListener(listener: UploadInitializedListenerType) {
+  return emitter.addListener(EVENTS.UPLOAD_INITIALIZED_EVENT, listener);
+}
 
 /**
  * Upload Started
@@ -53,6 +61,7 @@ function addProgressForListener(listener: ProgressForListenerType) {
 }
 
 export default {
+  addUploadInitializedListener,
   addUploadStartedListener,
   addUploadFinishedListener,
   addUploadFailedListener,
