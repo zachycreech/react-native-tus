@@ -191,7 +191,7 @@ extension TusNative: TUSClientDelegate {
     print("TUSClient started upload, id is \(id)")
     print("TUSClient remaining is \(client.remainingUploads)")
 
-    let body: [String:String] = [
+    let body: [String:Any] = [
       "uploadId": "\(id)",
       "sessionId": "\(client.sessionIdentifier)",
       "context": context!
@@ -205,7 +205,7 @@ extension TusNative: TUSClientDelegate {
     if client.remainingUploads == 0 {
       print("Finished uploading")
     }
-    let body: [String:String] = [
+    let body: [String:Any] = [
       "uploadId": "\(id)",
       "url": "\(url)",
       "sessionId": "\(client.sessionIdentifier)",
