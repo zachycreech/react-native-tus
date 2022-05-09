@@ -50,3 +50,12 @@ export type ProgressForDataType = {
   sessionId: string;
 };
 export type ProgressForListenerType = (arg0: ProgressForDataType) => void;
+
+export type BatchUploadRequestItem = {
+  fileUrl: string;
+  options: {
+    endpoint: string;
+    metadata: any;
+    headers: any;
+  };
+};
