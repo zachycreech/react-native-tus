@@ -1,6 +1,7 @@
 export type UploadStartedDataType = {
   uploadId: string;
   sessionId: string;
+  context?: any;
 };
 export type UploadStartedListenerType = (arg0: UploadStartedDataType) => void;
 
@@ -8,6 +9,7 @@ export type UploadFinishedDataType = {
   uploadId: string;
   sessionId: string;
   url: string;
+  context?: any;
 };
 export type UploadFinishedListenerType = (arg0: UploadFinishedDataType) => void;
 
@@ -15,6 +17,7 @@ export type UploadFailedDataType = {
   uploadId: string;
   sessionId: string;
   error: Error;
+  context?: any;
 };
 export type UploadFailedListenerType = (arg0: UploadFailedDataType) => void;
 
