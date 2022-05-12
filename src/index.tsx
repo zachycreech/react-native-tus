@@ -38,19 +38,36 @@ export const getRemainingUploads = () => TusNative.getRemainingUploads();
 
 export const startAll = () => TusNative.startAll();
 
-export const startSelection = (uploadIds: [string]) =>
+export const startSelection = (uploadIds: string[]) =>
   TusNative.startSelection(uploadIds);
 
 export const pauseAll = () => TusNative.pauseAll();
 
 export const pauseById = (uploadId: string) => TusNative.pauseById(uploadId);
 
+<<<<<<< Updated upstream
+=======
+export const pauseByIds = (uploadIds: string[]) =>
+  TusNative.pauseByIds(uploadIds);
+
+>>>>>>> Stashed changes
 export const cancelAll = () => TusNative.cancelAll();
 
 export const cancelById = (uploadId: string) => TusNative.cancelById(uploadId);
 
+<<<<<<< Updated upstream
 export const retryById = (uploadId: string) => TusNative.retryById(uploadId);
 
+=======
+export const cancelByIds = (uploadIds: string[]) =>
+  TusNative.cancelByIds(uploadIds);
+
+export const retryById = (uploadId: string) => TusNative.retryById(uploadId);
+
+export const retryByIds = (uploadIds: string[]) =>
+  TusNative.retryByIds(uploadIds);
+
+>>>>>>> Stashed changes
 export const getFailedUploadIds = () => TusNative.getFailedUploadIds();
 
 export const createBatchUpload = (uploads: BatchUploadRequestItem[]) =>

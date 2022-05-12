@@ -1,6 +1,10 @@
 {
   "name": "@zachywheeler/react-native-tus",
+<<<<<<< Updated upstream
   "version": "0.1.19",
+=======
+  "version": "0.1.21",
+>>>>>>> Stashed changes
   "description": "Native TUS implementation for React Native",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
