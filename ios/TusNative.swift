@@ -145,6 +145,19 @@ class TusNative: RCTEventEmitter {
     }
   }
 
+  @objc(pauseByIds:resolver:rejecter:)
+  func pauseByIds(uploadIds: [String], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    do {
+      for uploadId in uploadIds {
+        let id = UUID(uuidString: uploadId)!
+        try tusClient.cancel(id: id)
+      }
+      resolve(NSNull())
+    } catch {
+      reject("PAUSE_ERROR", "Unexpected error", error)
+    }
+  }
+
   @objc(cancelAll:rejecter:)
   func cancelAll(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
     do {
@@ -165,12 +178,38 @@ class TusNative: RCTEventEmitter {
       reject("CANCEL_ERROR", "Unexpected error", error)
     }
   }
+  
+  @objc(cancelByIds:resolver:rejecter:)
+  func cancelByIds(uploadIds: [String], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    do {
+      for uploadId in uploadIds {
+        let id = UUID(uuidString: uploadId)!
+        try tusClient.removeCacheFor(id: id)
+      }
+      resolve(NSNull())
+    } catch {
+      reject("CANCEL_ERROR", "Unexpected error", error)
+    }
+  }
 
   @objc(retryById:resolver:rejecter:)
   func retryById(uploadId: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
     do {
       let id = UUID(uuidString: uploadId)!
       try tusClient.retry(id: id)
+      resolve(NSNull())
+    } catch {
+      reject("RETRY_ERROR", "Unexpected error", error)
+    }
+  }
+  
+  @objc(retryByIds:resolver:rejecter:)
+  func retryByIds(uploadIds: [String], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    do {
+      for uploadId in uploadIds {
+        let id = UUID(uuidString: uploadId)!
+        try tusClient.retry(id: id)
+      }
       resolve(NSNull())
     } catch {
       reject("RETRY_ERROR", "Unexpected error", error)
