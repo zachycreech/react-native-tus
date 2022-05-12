@@ -45,11 +45,20 @@ export const pauseAll = () => TusNative.pauseAll();
 
 export const pauseById = (uploadId: string) => TusNative.pauseById(uploadId);
 
+export const pauseByIds = (uploadIds: [string]) =>
+  TusNative.pauseByIds(uploadIds);
+
 export const cancelAll = () => TusNative.cancelAll();
 
 export const cancelById = (uploadId: string) => TusNative.cancelById(uploadId);
 
+export const cancelByIds = (uploadIds: [string]) =>
+  TusNative.cancelByIds(uploadIds);
+
 export const retryById = (uploadId: string) => TusNative.retryById(uploadId);
+
+export const retryByIds = (uploadIds: [string]) =>
+  TusNative.retryByIds(uploadIds);
 
 export const getFailedUploadIds = () => TusNative.getFailedUploadIds();
 
