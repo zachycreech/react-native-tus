@@ -34,36 +34,42 @@ type Options = {
 // );
 // events.addProgressForListener((param) => console.log('Progress For: ', param));
 
-export const getRemainingUploads = () => TusNative.getRemainingUploads();
+export const getRemainingUploads = (): Promise<any> =>
+  TusNative.getRemainingUploads();
 
-export const startAll = () => TusNative.startAll();
+export const startAll = (): Promise<any> => TusNative.startAll();
 
-export const startSelection = (uploadIds: string[]) =>
+export const startSelection = (uploadIds: string[]): Promise<any> =>
   TusNative.startSelection(uploadIds);
 
-export const pauseAll = () => TusNative.pauseAll();
+export const pauseAll = (): Promise<any> => TusNative.pauseAll();
 
-export const pauseById = (uploadId: string) => TusNative.pauseById(uploadId);
+export const pauseById = (uploadId: string): Promise<any> =>
+  TusNative.pauseById(uploadId);
 
-export const pauseByIds = (uploadIds: string[]) =>
+export const pauseByIds = (uploadIds: string[]): Promise<any> =>
   TusNative.pauseByIds(uploadIds);
 
-export const cancelAll = () => TusNative.cancelAll();
+export const cancelAll = (): Promise<any> => TusNative.cancelAll();
 
-export const cancelById = (uploadId: string) => TusNative.cancelById(uploadId);
+export const cancelById = (uploadId: string): Promise<any> =>
+  TusNative.cancelById(uploadId);
 
-export const cancelByIds = (uploadIds: string[]) =>
+export const cancelByIds = (uploadIds: string[]): Promise<any> =>
   TusNative.cancelByIds(uploadIds);
 
-export const retryById = (uploadId: string) => TusNative.retryById(uploadId);
+export const retryById = (uploadId: string): Promise<any> =>
+  TusNative.retryById(uploadId);
 
-export const retryByIds = (uploadIds: string[]) =>
+export const retryByIds = (uploadIds: string[]): Promise<any> =>
   TusNative.retryByIds(uploadIds);
 
-export const getFailedUploadIds = () => TusNative.getFailedUploadIds();
+export const getFailedUploadIds = (): Promise<any> =>
+  TusNative.getFailedUploadIds();
 
-export const createBatchUpload = (uploads: BatchUploadRequestItem[]) =>
-  TusNative.createMultipleUploads(uploads);
+export const createBatchUpload = (
+  uploads: BatchUploadRequestItem[]
+): Promise<any> => TusNative.createMultipleUploads(uploads);
 
 export class Upload {
   file: string;
