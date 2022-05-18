@@ -5,6 +5,7 @@ import type {
   UploadFailedDataType,
   ProgressForDataType,
   BatchUploadRequestItem,
+  BatchUploadRequestResponse,
 } from './types';
 
 type Options = {
@@ -69,7 +70,7 @@ export const getFailedUploadIds = (): Promise<any> =>
 
 export const createBatchUpload = (
   uploads: BatchUploadRequestItem[]
-): Promise<any> => TusNative.createMultipleUploads(uploads);
+): Promise<BatchUploadRequestResponse> => TusNative.createMultipleUploads(uploads);
 
 export class Upload {
   file: string;
