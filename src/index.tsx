@@ -70,7 +70,8 @@ export const getFailedUploadIds = (): Promise<any> =>
 
 export const createBatchUpload = (
   uploads: BatchUploadRequestItem[]
-): Promise<BatchUploadRequestResponse> => TusNative.createMultipleUploads(uploads);
+): Promise<BatchUploadRequestResponse> =>
+  TusNative.createMultipleUploads(uploads);
 
 export class Upload {
   file: string;
