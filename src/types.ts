@@ -61,3 +61,9 @@ export type BatchUploadRequestItem = {
     headers: any;
   };
 };
+
+export type BatchUploadRequestResponse = {
+  fileUrl: string;
+  status: 'failure' | 'success';
+  uploadId: string;
+}[];
