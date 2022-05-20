@@ -6,6 +6,7 @@ export const EVENTS = {
   FILE_ERROR_EVENT: 'FileError',
   TOTAL_PROGRESS_EVENT: 'TotalProgress',
   PROGRESS_FOR_EVENT: 'ProgressFor',
+  HEARTBEAT_EVENT: 'Heartbeat',
 };
 
 export default {

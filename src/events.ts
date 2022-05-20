@@ -7,6 +7,7 @@ import type {
   FileErrorListenerType,
   TotalProgressListenerType,
   ProgressForListenerType,
+  HeartbeatListenerType,
 } from './types';
 
 import { emitter } from './nativeBridge';
@@ -60,6 +61,13 @@ function addProgressForListener(listener: ProgressForListenerType) {
   return emitter.addListener(EVENTS.PROGRESS_FOR_EVENT, listener);
 }
 
+/**
+ * Hearbeat events
+ */
+function addHeartbeatListener(listener: HeartbeatListenerType) {
+  return emitter.addListener(EVENTS.HEARTBEAT_EVENT, listener);
+}
+
 export default {
   addUploadInitializedListener,
   addUploadStartedListener,
@@ -68,4 +76,5 @@ export default {
   addFileErrorListener,
   addTotalProgressListener,
   addProgressForListener,
+  addHeartbeatListener,
 };

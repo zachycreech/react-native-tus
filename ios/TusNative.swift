@@ -12,13 +12,20 @@ class TusNative: RCTEventEmitter {
   static let fileErrorEvent = "FileError"
   static let totalProgressEvent = "TotalProgress"
   static let progressForEvent = "ProgressFor"
+  static let heartbeatEvent = "Heartbeat"
 
   let tusClient: TUSClient
-
+  lazy var timer: Timer = {
+    return Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+      self.sendEvent(withName: TusNative.heartbeatEvent, body: "")
+    }
+  }()
+  
   public override init() {
     tusClient = RNTusClientInstanceHolder.sharedInstance.tusClient!
     super.init()
     tusClient.delegate = self
+    print("Timer initialized: ", timer)
   }
 
   override func supportedEvents() -> [String]! {
@@ -29,14 +36,15 @@ class TusNative: RCTEventEmitter {
       TusNative.uploadFailedEvent,
       TusNative.fileErrorEvent,
       TusNative.totalProgressEvent,
-      TusNative.progressForEvent
+      TusNative.progressForEvent,
+      TusNative.heartbeatEvent
     ]
   }
 
   override public static func requiresMainQueueSetup() -> Bool {
     return false;
   }
-
+  
   @objc(getRemainingUploads:rejecter:)
   func getRemainingUploads(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
     let remainingUploads = tusClient.getRemainingUploads()
