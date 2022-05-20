@@ -51,6 +51,8 @@ export type ProgressForDataType = {
 };
 export type ProgressForListenerType = (arg0: ProgressForDataType) => void;
 
+export type HeartbeatListenerType = () => void;
+
 export type BatchUploadRequestItem = {
   fileUrl: string;
   options: {

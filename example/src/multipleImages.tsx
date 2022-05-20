@@ -162,6 +162,11 @@ export default function App() {
     // );
     // listeners.push(progressForListener);
 
+    const heartbeatListener = TusUpload.events.addHeartbeatListener(() => {
+      console.log('Heartbeat...');
+    });
+    listeners.push(heartbeatListener);
+
     return () => listeners.forEach(listener => listener.remove());
   }, []);
 
