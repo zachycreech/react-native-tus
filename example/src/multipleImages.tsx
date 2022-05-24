@@ -12,10 +12,7 @@ import * as ImagePicker from 'react-native-image-picker';
 import DocumentPicker from 'react-native-document-picker';
 import {DataTable} from 'react-native-paper';
 import RNFS from 'react-native-fs';
-import TusUpload, {
-  Upload,
-  createMultipleUploads,
-} from '@zachywheeler/react-native-tus';
+import TusUpload, {createBatchUpload} from '@zachywheeler/react-native-tus';
 
 /**
  * Given an absolute path returns relative path (remaining path after application ID)
@@ -37,6 +34,7 @@ const getRelativePath = (absolutePath: string) => {
 };
 
 export default function App() {
+  // @refresh reset
   const [uploadResult, setUploadResult] = React.useState<any>({});
   const [imageResponse, setImageResponse] = React.useState<any>();
 
@@ -45,19 +43,10 @@ export default function App() {
     if (!imageResponse) {
       return;
     }
-    // RNFS.readDir(RNFS.DocumentDirectoryPath).then(documentDir => {
-    //   console.log(JSON.stringify(documentDir, null, 2));
-    //   documentDir.forEach(document => {
-    //     if (document.isDirectory()) {
-    //       RNFS.readDir(document.path).then(childDir => {
-    //         console.log(JSON.stringify(childDir, null, 2));
-    //       });
-    //     }
-    //   });
-    // });
     const uploadOptions = {
       metadata: {
         name: 'example-name',
+        foo: 'bar',
       },
       headers: {
         'X-Example-Header': 'some-value',
@@ -70,30 +59,40 @@ export default function App() {
       imageResponse,
       async image => {
         if (await RNFS.exists(image.uri)) {
-          // const tusUpload = new Upload(image.uri, uploadOptions);
-
-          const tusUpload = new Upload(
-            getRelativePath(image.uri),
-            uploadOptions,
-          );
-          tusUpload.start();
           const uploadObject = {
             fileUrl: getRelativePath(image.uri),
             options: uploadOptions,
           };
-          let uploadObjects = [];
-          for (let x = 0; x < 500; x += 1) {
-            uploadObjects.push(uploadObject);
-          }
-          await createMultipleUploads(uploadObjects);
+          return uploadObject;
         }
       },
-      1,
-    );
+      10,
+    )
+      .then((uploadObjects: any[]) => {
+        return createBatchUpload(uploadObjects);
+      })
+      .catch(e => {
+        console.log('Error during creating uplaods: ', e);
+      });
   }, [imageResponse]);
 
   React.useEffect(() => {
     let listeners: EventSubscription[] = [];
+    const uploadInitializedListener = TusUpload.events.addUploadInitializedListener(
+      param => {
+        // console.log(`Upload started: `, param);
+        const {uploadId} = param;
+        setUploadResult((oldResult: any) => {
+          let newResult = {...oldResult};
+          newResult[uploadId] = {
+            uploadId,
+            status: 'Initialized',
+          };
+          return newResult;
+        });
+      },
+    );
+    listeners.push(uploadInitializedListener);
     const uploadStartedListener = TusUpload.events.addUploadStartedListener(
       param => {
         // console.log(`Upload started: `, param);
@@ -162,10 +161,10 @@ export default function App() {
     // );
     // listeners.push(progressForListener);
 
-    const heartbeatListener = TusUpload.events.addHeartbeatListener(() => {
-      console.log('Heartbeat...');
-    });
-    listeners.push(heartbeatListener);
+    // const heartbeatListener = TusUpload.events.addHeartbeatListener(() => {
+    //   console.log('Heartbeat...');
+    // });
+    // listeners.push(heartbeatListener);
 
     return () => listeners.forEach(listener => listener.remove());
   }, []);

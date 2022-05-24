@@ -15,17 +15,30 @@ class TusNative: RCTEventEmitter {
   static let heartbeatEvent = "Heartbeat"
 
   let tusClient: TUSClient
-  lazy var timer: Timer = {
-    return Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
-      self.sendEvent(withName: TusNative.heartbeatEvent, body: "")
-    }
-  }()
-  
+  private var heartbeatTimer: Timer!
+  //private weak lazy var timer: Timer = {
+  //  return Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) {[unknown as self] timer in
+  //    self.sendEvent(withName: TusNative.heartbeatEvent, body: "")
+  //  }
+  //}()
+
   public override init() {
     tusClient = RNTusClientInstanceHolder.sharedInstance.tusClient!
     super.init()
     tusClient.delegate = self
-    print("Timer initialized: ", timer)
+    // print("Timer initialized: ", timer)
+    // https://medium.com/fueled-engineering/memory-management-in-swift-common-issues-90dd7c08b77
+    // TLDR: it is necessary to create a weak reference to self inside of timer so that
+    // garbage collection knows that TusNative owns the timer and the timer does not own TusNative
+    class WeakTarget: NSObject {
+      weak var tusNative: TusNative?
+      @objc func sendHeartbeat(timer: Timer) {
+        self.tusNative?.sendHeartbeat()
+      }
+    }
+    let weakTarget = WeakTarget()
+    weakTarget.tusNative = self
+    self.heartbeatTimer = Timer.scheduledTimer(timeInterval: 1.0, target: weakTarget, selector: #selector(WeakTarget.sendHeartbeat(timer:)), userInfo: nil, repeats: true)
   }
 
   override func supportedEvents() -> [String]! {
@@ -43,6 +56,10 @@ class TusNative: RCTEventEmitter {
 
   override public static func requiresMainQueueSetup() -> Bool {
     return false;
+  }
+
+  @objc func sendHeartbeat() {
+    self.sendEvent(withName: TusNative.heartbeatEvent, body: "")
   }
   
   @objc(getRemainingUploads:rejecter:)
@@ -186,7 +203,7 @@ class TusNative: RCTEventEmitter {
       reject("CANCEL_ERROR", "Unexpected error", error)
     }
   }
-  
+
   @objc(cancelByIds:resolver:rejecter:)
   func cancelByIds(uploadIds: [String], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
     do {
@@ -210,7 +227,7 @@ class TusNative: RCTEventEmitter {
       reject("RETRY_ERROR", "Unexpected error", error)
     }
   }
-  
+
   @objc(retryByIds:resolver:rejecter:)
   func retryByIds(uploadIds: [String], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
     do {
