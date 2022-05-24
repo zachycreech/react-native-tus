@@ -78,8 +78,8 @@ export default function App() {
 
   React.useEffect(() => {
     let listeners: EventSubscription[] = [];
-    const uploadInitializedListener = TusUpload.events.addUploadInitializedListener(
-      param => {
+    const uploadInitializedListener =
+      TusUpload.events.addUploadInitializedListener(param => {
         // console.log(`Upload started: `, param);
         const {uploadId} = param;
         setUploadResult((oldResult: any) => {
@@ -90,8 +90,7 @@ export default function App() {
           };
           return newResult;
         });
-      },
-    );
+      });
     listeners.push(uploadInitializedListener);
     const uploadStartedListener = TusUpload.events.addUploadStartedListener(
       param => {
