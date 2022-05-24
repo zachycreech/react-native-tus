@@ -62,7 +62,10 @@ export const cancelByIds = (uploadIds: string[]): Promise<any> =>
 export const retryById = (uploadId: string): Promise<any> =>
   TusNative.retryById(uploadId);
 
-export const retryByIds = (uploadIds: string[]): Promise<any> =>
+/**
+ * @returns true if no errors
+ */
+export const retryByIds = (uploadIds: string[]): Promise<boolean> =>
   TusNative.retryByIds(uploadIds);
 
 export const getFailedUploadIds = (): Promise<any> =>
