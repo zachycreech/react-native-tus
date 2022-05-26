@@ -2,6 +2,6 @@
 #import <React/RCTEventEmitter.h>
 
 @interface RNTusClientBridgeInstanceHolder : NSObject
-+ (void)initializeBackgroundClient;
++ (void)initializeBackgroundClient:(int)chunkSize;
 + (void)scheduleBackgroundTasks;
 @end
