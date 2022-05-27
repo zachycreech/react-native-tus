@@ -14,7 +14,7 @@ public final class RNTusClientInstanceHolder : NSObject {
 
   public var tusClient: TUSClient?
 
-  public func initializeBackgroundClient() {
+    public func initializeBackgroundClient(_ chunkSize: Int) {
     print( "initializing BG Client")
     if tusClient == nil {
       let sessionId = "TUS BG Session"
@@ -28,7 +28,7 @@ public final class RNTusClientInstanceHolder : NSObject {
         server: URL(string: "http://localhost/files")!,
         sessionIdentifier: sessionId,
         storageDirectory: URL(string: "TUS/background")!,
-        chunkSize: 5 * 1024 * 1024
+        chunkSize: chunkSize
       )
   #if DEBUG
       try! tusClient.reset()
