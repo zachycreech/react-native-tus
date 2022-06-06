@@ -48,6 +48,7 @@ export type ProgressForDataType = {
   bytesUploaded: number;
   totalBytes: number;
   sessionId: string;
+  context?: any;
 };
 export type ProgressForListenerType = (arg0: ProgressForDataType) => void;
 

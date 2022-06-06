@@ -7,8 +7,8 @@ typedef struct FileUploads {
 
 @implementation RNTusClientBridgeInstanceHolder
 
-+ (void)initializeBackgroundClient {
-  [[RNTusClientInstanceHolder sharedInstance] initializeBackgroundClient];
++ (void)initializeBackgroundClient:(int)chunkSize {
+  [[RNTusClientInstanceHolder sharedInstance] initializeBackgroundClient:(int)chunkSize];
 }
 
 + (void)scheduleBackgroundTasks {
