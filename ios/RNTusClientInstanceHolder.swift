@@ -24,10 +24,15 @@ public final class RNTusClientInstanceHolder : NSObject {
       // bgUrlSessionConfig.isDiscretionary = false
       // let bgUrlSession = URLSession(configuration: bgUrlSessionConfig)
 
+      let defaultUrlSessionConfig = URLSessionConfiguration.default
+      defaultUrlSessionConfig.httpMaximumConnectionsPerHost = 2
+      let defaultUrlSession = URLSession(configuration: defaultUrlSessionConfig)
+      
       let tusClient = try! TUSClient(
         server: URL(string: "http://localhost/files")!,
         sessionIdentifier: sessionId,
         storageDirectory: URL(string: "TUS/background")!,
+        session: defaultUrlSession,
         chunkSize: 5 * 1024 * 1024
       )
   #if DEBUG
