@@ -64,15 +64,18 @@ export default function App() {
             options: uploadOptions,
           };
           return uploadObject;
+        } else {
+          console.log( `File: ${image.uri} exists? ${await RNFS.exists(image.uri)}` );
         }
       },
       10,
     )
       .then((uploadObjects: any[]) => {
-        return createBatchUpload(uploadObjects);
+
+        return uploadObjects.length > 0 ? createBatchUpload(uploadObjects) : '';
       })
       .catch(e => {
-        console.log('Error during creating uplaods: ', e);
+        console.log('Error during creating uploads: ', e);
       });
   }, [imageResponse]);
 
