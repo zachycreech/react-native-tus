@@ -186,8 +186,8 @@ class TusNative: RCTEventEmitter {
     }
   }
 
-  @objc(getPendingTasks:rejecter:)
-  func getPendingTasks(resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+  @objc(getPendingBackgroundTasks:rejecter:)
+  func getPendingBackgroundTasks(resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
     do {
         if #available(iOS 13.0, *) {
             try tusClient.getPendingTasks(handler: { tasks in

@@ -31,7 +31,7 @@ RCT_EXTERN_METHOD(createMultipleUploads:(NSArray *)fileUploads
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(getPendingTasks:(RCTPromiseResolveBlock)resolve
+RCT_EXTERN_METHOD(getPendingBackgroundTasks:(RCTPromiseResolveBlock)resolve
 rejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(startAll:(RCTPromiseResolveBlock)resolve
