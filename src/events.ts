@@ -72,8 +72,13 @@ function addHeartbeatListener(listener: HeartbeatListenerType) {
 /**
  * `BGTaskScheduler.scheduleSingleTask`error events
  */
- function addScheduleSingleTaskFailedListener(listener: ScheduleSingleTaskFailedListenerType) {
-  return emitter.addListener(EVENTS.SCHEDULE_SINGLE_TASK_FAILED_EVENT, listener);
+function addScheduleSingleTaskFailedListener(
+  listener: ScheduleSingleTaskFailedListenerType
+) {
+  return emitter.addListener(
+    EVENTS.SCHEDULE_SINGLE_TASK_FAILED_EVENT,
+    listener
+  );
 }
 
 export default {

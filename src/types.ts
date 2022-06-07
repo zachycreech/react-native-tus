@@ -58,7 +58,9 @@ export type ScheduleSingleTaskFailedDataType = {
   error: Error;
 };
 
-export type ScheduleSingleTaskFailedListenerType = (arg0: ScheduleSingleTaskFailedDataType) => void;
+export type ScheduleSingleTaskFailedListenerType = (
+  arg0: ScheduleSingleTaskFailedDataType
+) => void;
 
 export type BatchUploadRequestItem = {
   fileUrl: string;
