@@ -8,6 +8,7 @@ import type {
   TotalProgressListenerType,
   ProgressForListenerType,
   HeartbeatListenerType,
+  ScheduleSingleTaskFailedListenerType,
 } from './types';
 
 import { emitter } from './nativeBridge';
@@ -68,6 +69,13 @@ function addHeartbeatListener(listener: HeartbeatListenerType) {
   return emitter.addListener(EVENTS.HEARTBEAT_EVENT, listener);
 }
 
+/**
+ * `BGTaskScheduler.scheduleSingleTask`error events
+ */
+ function addScheduleSingleTaskFailedListener(listener: ScheduleSingleTaskFailedListenerType) {
+  return emitter.addListener(EVENTS.SCHEDULE_SINGLE_TASK_FAILED_EVENT, listener);
+}
+
 export default {
   addUploadInitializedListener,
   addUploadStartedListener,
@@ -77,4 +85,5 @@ export default {
   addTotalProgressListener,
   addProgressForListener,
   addHeartbeatListener,
+  addScheduleSingleTaskFailedListener,
 };

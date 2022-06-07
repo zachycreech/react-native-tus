@@ -71,6 +71,9 @@ export const retryByIds = (uploadIds: string[]): Promise<boolean> =>
 export const getFailedUploadIds = (): Promise<any> =>
   TusNative.getFailedUploadIds();
 
+export const getPendingTasks = (): Promise<any> => 
+  TusNative.getPendingTasks()
+
 export const createBatchUpload = (
   uploads: BatchUploadRequestItem[]
 ): Promise<BatchUploadRequestResponse> =>

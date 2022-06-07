@@ -7,6 +7,7 @@ export const EVENTS = {
   TOTAL_PROGRESS_EVENT: 'TotalProgress',
   PROGRESS_FOR_EVENT: 'ProgressFor',
   HEARTBEAT_EVENT: 'Heartbeat',
+  SCHEDULE_SINGLE_TASK_FAILED_EVENT: 'ScheduleSingleTaskFailedEvent',
 };
 
 export default {

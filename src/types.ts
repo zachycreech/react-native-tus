@@ -54,6 +54,12 @@ export type ProgressForListenerType = (arg0: ProgressForDataType) => void;
 
 export type HeartbeatListenerType = () => void;
 
+export type ScheduleSingleTaskFailedDataType = {
+  error: Error;
+};
+
+export type ScheduleSingleTaskFailedListenerType = (arg0: ScheduleSingleTaskFailedDataType) => void;
+
 export type BatchUploadRequestItem = {
   fileUrl: string;
   options: {

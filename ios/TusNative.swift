@@ -13,6 +13,7 @@ class TusNative: RCTEventEmitter {
   static let totalProgressEvent = "TotalProgress"
   static let progressForEvent = "ProgressFor"
   static let heartbeatEvent = "Heartbeat"
+  static let scheduleSingleTaskFailedEvent = "ScheduleSingleTaskFailedEvent"
 
   let tusClient: TUSClient
   private var heartbeatTimer: Timer!
@@ -50,7 +51,8 @@ class TusNative: RCTEventEmitter {
       TusNative.fileErrorEvent,
       TusNative.totalProgressEvent,
       TusNative.progressForEvent,
-      TusNative.heartbeatEvent
+      TusNative.heartbeatEvent,
+      TusNative.scheduleSingleTaskFailedEvent
     ]
   }
 
@@ -97,7 +99,7 @@ class TusNative: RCTEventEmitter {
       )
       resolve( "\(uploadId)" )
     } catch {
-      print("Unable to create upload: \(error)")
+      print("TUSClient: unable to create upload: \(error)")
       reject("UPLOAD_ERROR", "Unable to create upload", error)
     }
   }
@@ -118,7 +120,8 @@ class TusNative: RCTEventEmitter {
           filePath: fileToBeUploaded,
           uploadURL: URL(string: endpoint)!,
           customHeaders: headers,
-          context: metadata
+          context: metadata,
+          startNow: true
         )
         let uploadResult = [
           "status": "success",
@@ -127,7 +130,7 @@ class TusNative: RCTEventEmitter {
         ]
         uploads += [uploadResult]
       } catch {
-        print("Unable to create upload: \(error)")
+        print("TUSClient unable to create upload: \(error)")
         let uploadResult = [
           "status": "failure",
           "err": error,
@@ -180,6 +183,21 @@ class TusNative: RCTEventEmitter {
       resolve(NSNull())
     } catch {
       reject("PAUSE_ERROR", "Unexpected error", error)
+    }
+  }
+
+  @objc(getPendingTasks:rejecter:)
+  func getPendingTasks(resolve: @escaping RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    do {
+        if #available(iOS 13.0, *) {
+            try tusClient.getPendingTasks(handler: { tasks in
+                resolve(tasks)
+            })
+        } else {
+            reject("GET_PENDING_TASKS_ERROR", "Unexpected error", nil)
+        }
+    } catch {
+      reject("GET_PENDING_TASKS_ERROR", "Unexpected error", error)
     }
   }
 
@@ -276,7 +294,7 @@ extension TusNative: TUSClientDelegate {
     print("TUSClient finished upload, id is \(id) url is \(url)")
     print("TUSClient remaining is \(client.remainingUploads)")
     if client.remainingUploads == 0 {
-      print("Finished uploading")
+      print("TUSClient finished uploading")
     }
     let body: [String:Any] = [
       "uploadId": "\(id)",
@@ -285,6 +303,14 @@ extension TusNative: TUSClientDelegate {
       "context": context!
     ]
     sendEvent(withName: TusNative.uploadFinishedEvent, body: body)
+  }
+
+  func scheduleSingleTaskFailed(error: Error) {
+    print("TUSClient scheduleSingleTask failed error \(error)")
+    let body: [String:Any] = [
+      "error": error,
+    ]
+    sendEvent(withName: TusNative.scheduleSingleTaskFailedEvent, body: body)
   }
 
   func uploadFailed(id: UUID, error: Error, context: [String: String]?, client: TUSClient) {
@@ -299,7 +325,7 @@ extension TusNative: TUSClientDelegate {
   }
 
   func fileError(error: TUSClientError, client: TUSClient) {
-    print("TUSClient File error \(error)")
+    print("TUSClient file error \(error)")
     let body: [String:Any] = [
       "sessionId": "\(client.sessionIdentifier)",
       "error": error

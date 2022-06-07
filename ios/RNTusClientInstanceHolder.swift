@@ -15,7 +15,7 @@ public final class RNTusClientInstanceHolder : NSObject {
   public var tusClient: TUSClient?
 
     public func initializeBackgroundClient(_ chunkSize: Int) {
-    print( "initializing BG Client")
+    print("TUSClient initializing BG Client")
     if tusClient == nil {
       let sessionId = "TUS BG Session"
 
@@ -49,4 +49,6 @@ public final class RNTusClientInstanceHolder : NSObject {
       RNTusClientInstanceHolder.sharedInstance.tusClient!.scheduleBackgroundTasks()
     }
   }
+  
+
 }
