@@ -6,13 +6,14 @@ import {
   Image,
   ScrollView,
   SafeAreaView,
+  Alert,
 } from 'react-native';
 import asyncBatch from 'async-batch';
 import * as ImagePicker from 'react-native-image-picker';
 import DocumentPicker from 'react-native-document-picker';
 import {DataTable} from 'react-native-paper';
 import RNFS from 'react-native-fs';
-import TusUpload, {createBatchUpload} from '@zachywheeler/react-native-tus';
+import TusUpload, {createBatchUpload, scheduleBackgroundTasks} from '@zachywheeler/react-native-tus';
 
 /**
  * Given an absolute path returns relative path (remaining path after application ID)
@@ -65,14 +66,19 @@ export default function App() {
           };
           return uploadObject;
         } else {
-          console.log( `File: ${image.uri} exists? ${await RNFS.exists(image.uri)}` );
+          console.log(
+            `File: ${image.uri} exists? ${await RNFS.exists(image.uri)}`,
+          );
         }
       },
       10,
     )
       .then((uploadObjects: any[]) => {
-
         return uploadObjects.length > 0 ? createBatchUpload(uploadObjects) : '';
+      })
+      .then(async () => {
+        const bgUploadsScheduled = await scheduleBackgroundTasks();
+        Alert.alert(`Scheduled background tasks: ${bgUploadsScheduled}`);
       })
       .catch(e => {
         console.log('Error during creating uploads: ', e);
