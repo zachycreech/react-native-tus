@@ -233,7 +233,7 @@ class TusNative: RCTEventEmitter {
     do {
       for uploadId in uploadIds {
         let id = UUID(uuidString: uploadId)!
-        try let result = tusClient.retry(id: id)
+        let result = try tusClient.retry(id: id)
         results += [[
           "uploadId": "\(uploadId)",
           "didRetry": result.didRetry,
