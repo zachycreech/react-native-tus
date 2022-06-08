@@ -218,19 +218,22 @@ class TusNative: RCTEventEmitter {
   }
   
   /**
-    @returns true if all uploads were retried without error
+    @returns an array of the uploads that were retried and if they were successfully retried or not
    */
   @objc(retryByIds:resolver:rejecter:)
   func retryByIds(uploadIds: [String], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-    var anyFailed = false;
+    var results: [[String:Any]] = [];
     do {
       for uploadId in uploadIds {
         let id = UUID(uuidString: uploadId)!
-        if (try tusClient.retry(id: id) == false) {
-          anyFailed = true;
-        }
+        try let result = tusClient.retry(id: id)
+        results += [[
+          "uploadId": "\(uploadId)",
+          "didRetry": result.didRetry,
+          "reason": result.reason
+        ]];
       }
-      resolve(!anyFailed)
+      resolve(results)
     } catch {
       reject("RETRY_ERROR", "Unexpected error", error)
     }

@@ -6,6 +6,7 @@ import type {
   ProgressForDataType,
   BatchUploadRequestItem,
   BatchUploadRequestResponse,
+  RetryByIdsResponse,
 } from './types';
 
 type Options = {
@@ -65,7 +66,7 @@ export const retryById = (uploadId: string): Promise<any> =>
 /**
  * @returns true if no errors
  */
-export const retryByIds = (uploadIds: string[]): Promise<boolean> =>
+export const retryByIds = (uploadIds: string[]): Promise<RetryByIdsResponse> =>
   TusNative.retryByIds(uploadIds);
 
 export const getFailedUploadIds = (): Promise<any> =>
