@@ -34,7 +34,8 @@
   RCTAppSetupPrepareApp(application);
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
-  [RNTusClientBridgeInstanceHolder initializeBackgroundClient];
+  const NSInteger TUS_CHUNK_SIZE_BYTES = 5*1024*1024;
+  [RNTusClientBridgeInstanceHolder initializeBackgroundClient:(int)TUS_CHUNK_SIZE_BYTES];
 
 #if RCT_NEW_ARCH_ENABLED
   _contextContainer = std::make_shared<facebook::react::ContextContainer const>();
