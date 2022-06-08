@@ -68,3 +68,9 @@ export type BatchUploadRequestResponse = {
   status: 'failure' | 'success';
   uploadId: string;
 }[];
+
+export type RetryByIdsResponse = {
+  didRetry: boolean;
+  reason: string;
+  uploadId: string;
+}[];
