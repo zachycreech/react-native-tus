@@ -39,6 +39,9 @@ type Options = {
 export const getRemainingUploads = (): Promise<any> =>
   TusNative.getRemainingUploads();
 
+export const scheduleBackgroundTasks = (): Promise<boolean> =>
+  TusNative.scheduleBackgroundTasks();
+
 export const startAll = (): Promise<any> => TusNative.startAll();
 
 export const startSelection = (uploadIds: string[]): Promise<any> =>

@@ -139,6 +139,13 @@ class TusNative: RCTEventEmitter {
     }
     resolve(uploads)
   }
+  
+  @available(iOS 13.0, *)
+  @objc(scheduleBackgroundTasks:rejecter:)
+  func scheduleBackgroundTasks(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    let didScheduleBgTasks: Bool = tusClient.scheduleBackgroundTasks()
+    resolve(didScheduleBgTasks)
+  }
 
   @objc(startAll:rejecter:)
   func startAll(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
