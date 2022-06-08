@@ -24,7 +24,7 @@ jobs:
   version:
     needs: [tests]
     runs-on: ubuntu-latest
-    if: github.repository_owner == 'zachywheeler' && !startsWith(github.event.head_commit.message, '[RELEASE]')
+    if: github.repository_owner == 'zachywheeler' && github.ref == 'refs/heads/main' && !startsWith(github.event.head_commit.message, '[RELEASE]')
     steps:
       - uses: actions/checkout@v2
         with:
