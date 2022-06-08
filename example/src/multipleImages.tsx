@@ -65,13 +65,14 @@ export default function App() {
           };
           return uploadObject;
         } else {
-          console.log( `File: ${image.uri} exists? ${await RNFS.exists(image.uri)}` );
+          console.log(
+            `File: ${image.uri} exists? ${await RNFS.exists(image.uri)}`,
+          );
         }
       },
       10,
     )
       .then((uploadObjects: any[]) => {
-
         return uploadObjects.length > 0 ? createBatchUpload(uploadObjects) : '';
       })
       .catch(e => {
