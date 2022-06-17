@@ -14,7 +14,7 @@ public final class RNTusClientInstanceHolder : NSObject {
     
     public var tusClient: TUSClient?
     
-    public func initializeBackgroundClient(_ chunkSize: Int) {
+    public func initializeBackgroundClient(_ chunkSize: Int, maxConcurrentUploads: Int) {
         print( "initializing BG Client")
         if tusClient == nil {
             let sessionId = "TUS BG Session"
@@ -41,7 +41,8 @@ public final class RNTusClientInstanceHolder : NSObject {
                 sessionIdentifier: sessionId,
                 storageDirectory: URL(string: "TUS/background")!,
                 session: urlSession,
-                chunkSize: chunkSize
+                chunkSize: chunkSize,
+                maxConcurrentUploads: maxConcurrentUploads
             )
 #if DEBUG
             try! tusClient.reset()

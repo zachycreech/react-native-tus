@@ -7,8 +7,8 @@ typedef struct FileUploads {
 
 @implementation RNTusClientBridgeInstanceHolder
 
-+ (void)initializeBackgroundClient:(int)chunkSize {
-  [[RNTusClientInstanceHolder sharedInstance] initializeBackgroundClient:(int)chunkSize];
++ (void)initializeBackgroundClient:(int)chunkSize maxConcurrentUploads:(int)maxConcurrentUploads {
+  [[RNTusClientInstanceHolder sharedInstance] initializeBackgroundClient:(int)chunkSize maxConcurrentUploads:(int)maxConcurrentUploads];
 }
 
 + (void)scheduleBackgroundTasks {
