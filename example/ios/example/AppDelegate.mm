@@ -35,7 +35,8 @@
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   const NSInteger TUS_CHUNK_SIZE_BYTES = 5*1024*1024;
-  [RNTusClientBridgeInstanceHolder initializeBackgroundClient:(int)TUS_CHUNK_SIZE_BYTES];
+  const NSInteger TUS_MAX_CONCURRENT_UPLOADS = 25;
+  [RNTusClientBridgeInstanceHolder initializeBackgroundClient:(int)TUS_CHUNK_SIZE_BYTES maxConcurrentUploads:(int)TUS_MAX_CONCURRENT_UPLOADS];
 
 #if RCT_NEW_ARCH_ENABLED
   _contextContainer = std::make_shared<facebook::react::ContextContainer const>();
