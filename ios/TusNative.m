@@ -22,6 +22,9 @@ typedef struct FileUploads {
 RCT_EXTERN_METHOD(getRemainingUploads:(RCTPromiseResolveBlock)resolve
                      rejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(getInfo:(RCTPromiseResolveBlock)resolve
+                     rejecter:(RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(createUpload:(NSString *)fileUrl
                   options:(NSDictionary *)options
                   resolver:(RCTPromiseResolveBlock)resolve

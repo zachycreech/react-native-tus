@@ -68,6 +68,12 @@ class TusNative: RCTEventEmitter {
     resolve(remainingUploads)
   }
 
+  @objc(getInfo:rejecter:)
+  func getInfo(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+    let info = tusClient.getInfo()
+    resolve(info)
+  }
+
   func buildFileUrl(fileUrl: String) -> URL {
     let fileToBeUploaded: URL
     if (fileUrl.starts(with: "file:///") || fileUrl.starts(with: "/var/") || fileUrl.starts(with: "/private/var/")) {
