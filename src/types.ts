@@ -74,3 +74,12 @@ export type RetryByIdsResponse = {
   reason: string;
   uploadId: string;
 }[];
+
+export type GetInfoResponse = {
+  pendingTasksCount: number;
+  runningTasksCount: number;
+  maxConcurrentUploads: number;
+  currentConcurrentUploads: number;
+  runningUploadsCount: number;
+  filesToUploadCount: number;
+};
