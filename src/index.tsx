@@ -40,8 +40,7 @@ type Options = {
 export const getRemainingUploads = (): Promise<any> =>
   TusNative.getRemainingUploads();
 
-export const getInfo = (): Promise<GetInfoResponse> =>
-  TusNative.getInfo();
+export const getInfo = (): Promise<GetInfoResponse> => TusNative.getInfo();
 
 export const scheduleBackgroundTasks = (): Promise<boolean> =>
   TusNative.scheduleBackgroundTasks();
