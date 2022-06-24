@@ -93,13 +93,15 @@ class TusNative: RCTEventEmitter {
     let endpoint: String = options["endpoint"]! as? String ?? ""
     let headers = options["headers"]! as? [String: String] ?? [:]
     let metadata = options["metadata"]! as? [String: String] ?? [:]
+    let startNow = options["startNow"]! as? Bool ?? true
 
     do {
       let uploadId = try tusClient.uploadFileAt(
         filePath: fileToBeUploaded,
         uploadURL: URL(string: endpoint)!,
         customHeaders: headers,
-        context: metadata
+        context: metadata,
+        startNow: startNow
       )
       resolve( "\(uploadId)" )
     } catch {
@@ -111,6 +113,7 @@ class TusNative: RCTEventEmitter {
   @objc(createMultipleUploads:resolver:rejecter:)
   func createMultipleUploads(fileUploads: [[String: Any]], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
     var uploads: [[String:Any]] = []
+    tusClient.stopAndCancelAll()
     for fileUpload in fileUploads {
       let fileUrl = fileUpload["fileUrl"] ?? ""
       let options = fileUpload["options"] as? [String: Any] ?? [:]
@@ -124,7 +127,8 @@ class TusNative: RCTEventEmitter {
           filePath: fileToBeUploaded,
           uploadURL: URL(string: endpoint)!,
           customHeaders: headers,
-          context: metadata
+          context: metadata,
+          startNow: false
         )
         let uploadResult = [
           "status": "success",
@@ -143,6 +147,7 @@ class TusNative: RCTEventEmitter {
         uploads += [uploadResult]
       }
     }
+    tusClient.start()
     resolve(uploads)
   }
   
