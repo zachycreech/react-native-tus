@@ -61,7 +61,7 @@ export type BatchUploadRequestItem = {
     metadata: any;
     headers: any;
   };
-  startNow: boolean;
+  startNow?: boolean;
 };
 
 export type BatchUploadRequestResponse = {
