@@ -9,22 +9,22 @@ import TUSKit
 
 @objcMembers
 public final class RNTusClientInstanceHolder : NSObject {
-    
+
     public static let sharedInstance = RNTusClientInstanceHolder()
-    
+
     public var tusClient: TUSClient?
-    
+
     public func initializeBackgroundClient(_ chunkSize: Int, maxConcurrentUploads: Int) {
         print( "initializing BG Client")
         if tusClient == nil {
             let sessionId = "TUS BG Session"
-            
+
             // TODO: See if Background URL Session support can be added to TUSKit
             // let bgUrlSessionConfig = URLSessionConfiguration.background(withIdentifier: sessionId)
             // bgUrlSessionConfig.isDiscretionary = false
             // let bgUrlSession = URLSession(configuration: bgUrlSessionConfig)
-            
-            let urlSessionConfig = URLSessionConfiguration.ephemeral
+
+            let urlSessionConfig = URLSessionConfiguration.default
             // Restrict maximum parallel connections to 2
             urlSessionConfig.httpMaximumConnectionsPerHost = 2
             // 60 Second timeout (resets if data transmitted)
@@ -33,9 +33,8 @@ public final class RNTusClientInstanceHolder : NSObject {
             urlSessionConfig.waitsForConnectivity = true
             // Dont' let system decide when to start the task
             urlSessionConfig.isDiscretionary = false
-            // Disable storing all cookies in one shared container so we can pass over AWS ALB cookie manually
             let urlSession = URLSession(configuration: urlSessionConfig)
-            
+
             let tusClient = try! TUSClient(
                 server: URL(string: "http://localhost/files")!,
                 sessionIdentifier: sessionId,
@@ -47,16 +46,16 @@ public final class RNTusClientInstanceHolder : NSObject {
 #if DEBUG
             try! tusClient.reset()
 #endif
-            
+
             if #available(iOS 13, *) {
                 print("TUSClient attempting to schedule background tasks")
                 tusClient.scheduleBackgroundTasks()
             }
-            
+
             RNTusClientInstanceHolder.sharedInstance.tusClient = tusClient
         }
     }
-    
+
     public func scheduleBackgroundTasks() {
         if #available(iOS 13, *) {
             print("TUSClient attempting to schedule background tasks")
