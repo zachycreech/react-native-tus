@@ -251,6 +251,7 @@ class TusNative: RCTEventEmitter {
           "reason": result.reason
         ]];
       }
+      tusClient.start()
       resolve(results)
     } catch {
       reject("RETRY_ERROR", "Unexpected error", error)

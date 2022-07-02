@@ -79,6 +79,8 @@ export type RetryByIdsResponse = {
 export type GetInfoResponse = {
   pendingTasksCount: number;
   runningTasksCount: number;
+  maxConcurrentTasks: number;
+  currentConcurrentTasks: number;
   maxConcurrentUploads: number;
   currentConcurrentUploads: number;
   runningUploadsCount: number;
