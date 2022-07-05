@@ -48,8 +48,8 @@ public final class RNTusClientInstanceHolder : NSObject {
 #endif
 
             if #available(iOS 13, *) {
-                print("TUSClient attempting to schedule background tasks")
-                tusClient.scheduleBackgroundTasks()
+                print("TUSClient attempting to register for background tasks")
+                tusClient.registerForBackgroundTasks()
             }
 
             RNTusClientInstanceHolder.sharedInstance.tusClient = tusClient
