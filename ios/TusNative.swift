@@ -215,6 +215,7 @@ class TusNative: RCTEventEmitter {
   func cancelById(uploadId: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
     do {
       let id = UUID(uuidString: uploadId)!
+      try tusClient.cancel(id: id)
       try tusClient.removeCacheFor(id: id)
       resolve(NSNull())
     } catch {
@@ -227,6 +228,7 @@ class TusNative: RCTEventEmitter {
     do {
       for uploadId in uploadIds {
         let id = UUID(uuidString: uploadId)!
+        try tusClient.cancel(id: id)
         try tusClient.removeCacheFor(id: id)
       }
       resolve(NSNull())
@@ -241,6 +243,7 @@ class TusNative: RCTEventEmitter {
   @objc(retryByIds:resolver:rejecter:)
   func retryByIds(uploadIds: [String], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
     var results: [[String:Any]] = [];
+    var taskIds: [UUID] = [];
     do {
       for uploadId in uploadIds {
         let id = UUID(uuidString: uploadId)!
@@ -250,8 +253,9 @@ class TusNative: RCTEventEmitter {
           "didRetry": result.didRetry,
           "reason": result.reason
         ]];
+        taskIds.append(id);
       }
-      tusClient.start()
+      tusClient.start(taskIds: taskIds)
       resolve(results)
     } catch {
       reject("RETRY_ERROR", "Unexpected error", error)
