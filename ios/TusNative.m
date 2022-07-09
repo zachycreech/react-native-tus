@@ -40,6 +40,9 @@ RCT_EXTERN_METHOD(scheduleBackgroundTasks:(RCTPromiseResolveBlock)resolve
 RCT_EXTERN_METHOD(startAll:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(sync:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(startSelection:(NSDictionary *)uploadIds
                      resolver:(RCTPromiseResolveBlock)resolve
                      rejecter:(RCTPromiseRejectBlock)reject)

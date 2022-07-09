@@ -8,6 +8,7 @@ import type {
   BatchUploadRequestResponse,
   RetryByIdsResponse,
   GetInfoResponse,
+  SyncResponse,
 } from './types';
 
 type Options = {
@@ -46,6 +47,8 @@ export const scheduleBackgroundTasks = (): Promise<boolean> =>
   TusNative.scheduleBackgroundTasks();
 
 export const startAll = (): Promise<any> => TusNative.startAll();
+
+export const sync = (): Promise<SyncResponse> => TusNative.sync();
 
 export const startSelection = (uploadIds: string[]): Promise<any> =>
   TusNative.startSelection(uploadIds);
