@@ -76,6 +76,14 @@ export type RetryByIdsResponse = {
   uploadId: string;
 }[];
 
+export type SyncResponse = {
+  id: string;
+  bytesUploaded: number;
+  size: number;
+  isError: boolean;
+  name: string;
+}[];
+
 export type GetInfoResponse = {
   pendingTasksCount: number;
   runningTasksCount: number;
