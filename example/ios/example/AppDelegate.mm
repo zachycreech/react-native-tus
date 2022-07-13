@@ -71,11 +71,6 @@
 #endif
 }
 
-- (void)applicationDidEnterBackground:(UIApplication *)application
-{
-  [RNTusClientBridgeInstanceHolder scheduleBackgroundTasks];
-}
-
 #if RCT_NEW_ARCH_ENABLED
 
 #pragma mark - RCTCxxBridgeDelegate

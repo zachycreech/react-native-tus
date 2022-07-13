@@ -43,9 +43,6 @@ export const getRemainingUploads = (): Promise<any> =>
 
 export const getInfo = (): Promise<GetInfoResponse> => TusNative.getInfo();
 
-export const scheduleBackgroundTasks = (): Promise<boolean> =>
-  TusNative.scheduleBackgroundTasks();
-
 export const startAll = (): Promise<any> => TusNative.startAll();
 
 export const sync = (): Promise<SyncResponse> => TusNative.sync();

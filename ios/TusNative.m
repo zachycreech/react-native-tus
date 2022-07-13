@@ -11,10 +11,6 @@ typedef struct FileUploads {
   [[RNTusClientInstanceHolder sharedInstance] initializeBackgroundClient:(int)chunkSize maxConcurrentUploads:(int)maxConcurrentUploads];
 }
 
-+ (void)scheduleBackgroundTasks {
-  [[RNTusClientInstanceHolder sharedInstance] scheduleBackgroundTasks];
-}
-
 @end
 
 @interface RCT_EXTERN_MODULE(TusNative, RCTEventEmitter)
@@ -32,9 +28,6 @@ RCT_EXTERN_METHOD(createUpload:(NSString *)fileUrl
 
 RCT_EXTERN_METHOD(createMultipleUploads:(NSArray *)fileUploads
                   resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(scheduleBackgroundTasks:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(startAll:(RCTPromiseResolveBlock)resolve

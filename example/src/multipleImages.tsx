@@ -15,7 +15,6 @@ import {DataTable} from 'react-native-paper';
 import RNFS from 'react-native-fs';
 import TusUpload, {
   createBatchUpload,
-  scheduleBackgroundTasks,
 } from '@zachywheeler/react-native-tus';
 
 /**
@@ -78,10 +77,6 @@ export default function App() {
     )
       .then((uploadObjects: any[]) => {
         return uploadObjects.length > 0 ? createBatchUpload(uploadObjects) : '';
-      })
-      .then(async () => {
-        const bgUploadsScheduled = await scheduleBackgroundTasks();
-        Alert.alert(`Scheduled background tasks: ${bgUploadsScheduled}`);
       })
       .catch(e => {
         console.log('Error during creating uploads: ', e);

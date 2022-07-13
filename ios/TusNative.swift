@@ -3,6 +3,8 @@ import TUSKit
 import React
 import UIKit
 
+
+@available(iOS 13.0, *)
 @objc(TusNative)
 class TusNative: RCTEventEmitter {
   static let uploadInitializedEvent = "UploadInitialized"
@@ -150,13 +152,6 @@ class TusNative: RCTEventEmitter {
     tusClient.start()
     resolve(uploads)
   }
-  
-  @available(iOS 13.0, *)
-  @objc(scheduleBackgroundTasks:rejecter:)
-  func scheduleBackgroundTasks(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-    let didScheduleBgTasks: Bool = tusClient.scheduleBackgroundTasks()
-    resolve(didScheduleBgTasks)
-  }
 
   @objc(startAll:rejecter:)
   func startAll(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
@@ -279,6 +274,7 @@ class TusNative: RCTEventEmitter {
   }
 }
 
+@available(iOS 13.0, *)
 extension TusNative: TUSClientDelegate {
   func didInitializeUpload(id: UUID, context: [String: String]?, client: TUSClient) {
     print("TUSClient initialized upload, id is \(id)")

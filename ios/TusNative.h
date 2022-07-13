@@ -3,5 +3,4 @@
 
 @interface RNTusClientBridgeInstanceHolder : NSObject
 + (void)initializeBackgroundClient:(int)chunkSize maxConcurrentUploads:(int)maxConcurrentUploads;
-+ (void)scheduleBackgroundTasks;
 @end
