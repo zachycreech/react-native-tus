@@ -7,7 +7,6 @@ import UIKit
 @available(iOS 13.0, *)
 @objc(TusNative)
 class TusNative: RCTEventEmitter {
-  static let uploadStartedEvent = "UploadStarted"
   static let uploadFinishedEvent = "UploadFinished"
   static let uploadFailedEvent = "UploadFailed"
   static let fileErrorEvent = "FileError"
@@ -38,7 +37,6 @@ class TusNative: RCTEventEmitter {
 
   override func supportedEvents() -> [String]! {
     return [
-      TusNative.uploadStartedEvent,
       TusNative.uploadFinishedEvent,
       TusNative.uploadFailedEvent,
       TusNative.fileErrorEvent,
@@ -109,7 +107,7 @@ class TusNative: RCTEventEmitter {
       let metadata = options["metadata"]! as? [String: String] ?? [:]
 
       do {
-        let uploadId = try tusClient.uploadFileAt(
+        let uploadId = try tusClient.uploadFile(
           filePath: fileToBeUploaded,
           uploadURL: URL(string: endpoint)!,
           customHeaders: headers,
@@ -259,16 +257,6 @@ class TusNative: RCTEventEmitter {
 
 @available(iOS 13.0, *)
 extension TusNative: TUSClientDelegate {
-  func didStartUpload(id: UUID, context: [String: String]?) {
-        print("TUSClient started upload, id is \(id)")
-        
-        let body: [String:Any] = [
-            "uploadId": "\(id)",
-            "context": context!
-        ]
-        sendEvent(withName: TusNative.uploadStartedEvent, body: body)
-    }
-    
     func didFinishUpload(id: UUID, context: [String: String]?) {
         print("TUSClient finished upload, id is \(id)")
         let body: [String:Any] = [
@@ -288,14 +276,14 @@ extension TusNative: TUSClientDelegate {
         sendEvent(withName: TusNative.uploadFailedEvent, body: body)
     }
 
-  func fileError(error: TUSClientError, client: TUSClient) {
-    print("TUSClient File error \(error)")
-    let body: [String:Any] = [
-      "sessionId": "\(client.sessionIdentifier)",
-      "error": error
-    ]
-    sendEvent(withName: TusNative.fileErrorEvent, body: body)
-  }
+   func fileError(id: String, errorMessage: String) {
+        print("TUSClient File error \(errorMessage)")
+        let body: [String:Any] = [
+           "uploadId": "\(id)",
+            "errorMessage": errorMessage
+        ]
+        sendEvent(withName: TusNative.fileErrorEvent, body: body)
+    }
 
   func progressFor(id: UUID, context: [String: String]?, bytesUploaded: Int, totalBytes: Int, client: TUSClient) {
     let body: [String:Any] = [

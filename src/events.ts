@@ -1,6 +1,5 @@
 import { EVENTS } from './constants';
 import type {
-  UploadStartedListenerType,
   UploadFinishedListenerType,
   UploadFailedListenerType,
   FileErrorListenerType,
@@ -9,13 +8,6 @@ import type {
 } from './types';
 
 import { emitter } from './nativeBridge';
-
-/**
- * Upload Started
- */
-function addUploadStartedListener(listener: UploadStartedListenerType) {
-  return emitter.addListener(EVENTS.UPLOAD_STARTED_EVENT, listener);
-}
 
 /**
  * Upload finished
@@ -53,8 +45,6 @@ function addHeartbeatListener(listener: HeartbeatListenerType) {
 }
 
 export default {
-  addUploadInitializedListener,
-  addUploadStartedListener,
   addUploadFinishedListener,
   addUploadFailedListener,
   addFileErrorListener,

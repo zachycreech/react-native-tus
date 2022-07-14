@@ -40,25 +40,8 @@ export default function App() {
 
   React.useEffect(() => {
     let listeners: EventSubscription[] = [];
-    const uploadStartedListener = TusUpload.events.addUploadStartedListener(
-      param => {
-        // console.log(`Upload started: `, param);
-        const {uploadId} = param;
-        setUploadResult((oldResult: any) => {
-          let newResult = {...oldResult};
-          newResult[uploadId] = {
-            uploadId,
-            status: 'Started',
-          };
-          return newResult;
-        });
-      },
-    );
-    listeners.push(uploadStartedListener);
-
     const uploadFinishedListener = TusUpload.events.addUploadFinishedListener(
       param => {
-        // console.log(`Upload started: `, param);
         const {uploadId} = param;
         setUploadResult((oldResult: any) => {
           let newResult = {...oldResult};
@@ -74,7 +57,6 @@ export default function App() {
 
     const uploadFailedListener = TusUpload.events.addUploadFailedListener(
       param => {
-        // console.log(`Upload started: `, param);
         const {uploadId} = param;
         setUploadResult((oldResult: any) => {
           let newResult = {...oldResult};
