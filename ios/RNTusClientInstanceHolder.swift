@@ -15,7 +15,7 @@ public final class RNTusClientInstanceHolder : NSObject {
 
     public var tusClient: TUSClient?
 
-    public func initSession(_ chunkSize: Int, maxConcurrentUploads: Int) {
+    public func initSession(_ chunkSize: Int, maxConcurrentUploadsWifi: Int, maxConcurrentUploadsNoWifi: Int, completionHandler: (() -> Void)?) {
         print("initializing TUSClient")
         if tusClient == nil {
             let sessionId = "io.tus.uploading"
@@ -24,12 +24,16 @@ public final class RNTusClientInstanceHolder : NSObject {
                 sessionIdentifier: sessionId,
                 storageDirectory: URL(string: "TUS/background")!,
                 chunkSize: chunkSize,
-                maxConcurrentUploads: maxConcurrentUploads
+                maxConcurrentUploadsWifi: maxConcurrentUploadsWifi,
+                maxConcurrentUploadsNoWifi: maxConcurrentUploadsNoWifi,
+                backgroundSessionCompletionHandler: completionHandler
             )
 #if DEBUG
             try! tusClient.reset()
 #endif
             RNTusClientInstanceHolder.sharedInstance.tusClient = tusClient
+        } else {
+            RNTusClientInstanceHolder.sharedInstance.tusClient?.backgroundSessionCompletionHandler = completionHandler
         }
     }
 }

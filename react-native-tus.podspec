@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.license      = package["license"]
   s.authors      = package["contributors"]
 
-  s.platforms    = { :ios => "10.0" }
+  s.platforms    = { :ios => "13.4" }
   s.source       = { :git => "https://github.com/zachywheeler/react-native-tus-client.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,mm,swift}"

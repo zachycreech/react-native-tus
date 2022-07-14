@@ -7,8 +7,12 @@ typedef struct FileUploads {
 
 @implementation RNTusClientBridgeInstanceHolder
 
-+ (void)initializeBackgroundClient:(int)chunkSize maxConcurrentUploads:(int)maxConcurrentUploads {
-  [[RNTusClientInstanceHolder sharedInstance] initializeBackgroundClient:(int)chunkSize maxConcurrentUploads:(int)maxConcurrentUploads];
++ (void)initSession:(int)chunkSize maxConcurrentUploadsWifi:(int)maxConcurrentUploadsWifi
+maxConcurrentUploadsNoWifi:(int)maxConcurrentUploadsNoWifi
+    completionHandler:(void (^)(void))completionHandler {
+  [[RNTusClientInstanceHolder sharedInstance] initSession:(int)chunkSize maxConcurrentUploadsWifi:(int)maxConcurrentUploadsWifi
+   maxConcurrentUploadsNoWifi:(int)maxConcurrentUploadsNoWifi
+                                        completionHandler:(void (^)(void))completionHandler];
 }
 
 @end
@@ -31,9 +35,6 @@ RCT_EXTERN_METHOD(createMultipleUploads:(NSArray *)fileUploads
                   rejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(startAll:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(sync:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(startSelection:(NSDictionary *)uploadIds

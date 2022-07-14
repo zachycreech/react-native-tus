@@ -94,13 +94,6 @@ export default function App() {
     // listeners.push(fileErrorListener);
 
     // Progress events can get a bit spammy
-    // const totalProgressListener = TusUpload.events.addTotalProgressListener(
-    //   (param) => {
-    //     console.log('Total Progress: ', param);
-    //   }
-    // );
-    // listeners.push(totalProgressListener);
-
     // const progressForListener = TusUpload.events.addProgressForListener(
     //   (param) => {
     //     console.log('Progress For: ', param);

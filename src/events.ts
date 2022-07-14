@@ -1,23 +1,14 @@
 import { EVENTS } from './constants';
 import type {
-  UploadInitializedListenerType,
   UploadStartedListenerType,
   UploadFinishedListenerType,
   UploadFailedListenerType,
   FileErrorListenerType,
-  TotalProgressListenerType,
   ProgressForListenerType,
   HeartbeatListenerType,
 } from './types';
 
 import { emitter } from './nativeBridge';
-
-/**
- * Upload Initialized
- */
-function addUploadInitializedListener(listener: UploadInitializedListenerType) {
-  return emitter.addListener(EVENTS.UPLOAD_INITIALIZED_EVENT, listener);
-}
 
 /**
  * Upload Started
@@ -48,13 +39,6 @@ function addFileErrorListener(listener: FileErrorListenerType) {
 }
 
 /**
- * Total progress for the current client
- */
-function addTotalProgressListener(listener: TotalProgressListenerType) {
-  return emitter.addListener(EVENTS.TOTAL_PROGRESS_EVENT, listener);
-}
-
-/**
  * Progress events
  */
 function addProgressForListener(listener: ProgressForListenerType) {
@@ -74,7 +58,6 @@ export default {
   addUploadFinishedListener,
   addUploadFailedListener,
   addFileErrorListener,
-  addTotalProgressListener,
   addProgressForListener,
   addHeartbeatListener,
 };

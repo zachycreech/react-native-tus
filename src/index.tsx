@@ -20,9 +20,7 @@ type Options = {
   onError?: (error: Error | unknown) => void;
 };
 
-// events.addUploadInitializedListener((param) =>
-//   console.log('Upload Initialized: ', param)
-// );
+
 // events.addUploadStartedListener((param) =>
 //   console.log('Upload Started: ', param)
 // );
@@ -33,9 +31,6 @@ type Options = {
 //   console.log('Upload Failed: ', param)
 // );
 // events.addFileErrorListener((param) => console.log('File Error: ', param));
-// events.addTotalProgressListener((param) =>
-//   console.log('Total Progress: ', param)
-// );
 // events.addProgressForListener((param) => console.log('Progress For: ', param));
 
 export const getRemainingUploads = (): Promise<any> =>
@@ -43,7 +38,10 @@ export const getRemainingUploads = (): Promise<any> =>
 
 export const getInfo = (): Promise<GetInfoResponse> => TusNative.getInfo();
 
-export const startAll = (): Promise<any> => TusNative.startAll();
+/**
+ * Read any cached files on disk and start upload tasks for them
+ */
+export const startAll = (): Promise<boolean> => TusNative.startAll();
 
 export const sync = (): Promise<SyncResponse> => TusNative.sync();
 
@@ -87,14 +85,12 @@ export class Upload {
   file: string;
   options: Options;
   uploadId: string;
-  url: string;
   subscriptions: Array<{ remove: () => void }>;
 
   constructor(file: string, options: Options) {
     this.file = file;
     this.options = options;
     this.uploadId = '';
-    this.url = '';
     this.subscriptions = [];
   }
 
@@ -178,9 +174,8 @@ export class Upload {
   subscribe() {
     this.subscriptions.push(
       events.addUploadFinishedListener(
-        ({ uploadId, url }: UploadFinishedDataType) => {
+        ({ uploadId }: UploadFinishedDataType) => {
           if (uploadId === this.uploadId) {
-            this.url = url;
             this.onSuccess(uploadId);
             this.unsubscribe();
           }

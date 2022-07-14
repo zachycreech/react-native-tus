@@ -7,22 +7,15 @@ import UIKit
 @available(iOS 13.0, *)
 @objc(TusNative)
 class TusNative: RCTEventEmitter {
-  static let uploadInitializedEvent = "UploadInitialized"
   static let uploadStartedEvent = "UploadStarted"
   static let uploadFinishedEvent = "UploadFinished"
   static let uploadFailedEvent = "UploadFailed"
   static let fileErrorEvent = "FileError"
-  static let totalProgressEvent = "TotalProgress"
   static let progressForEvent = "ProgressFor"
   static let heartbeatEvent = "Heartbeat"
 
   let tusClient: TUSClient
   private var heartbeatTimer: Timer!
-  //private weak lazy var timer: Timer = {
-  //  return Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) {[unknown as self] timer in
-  //    self.sendEvent(withName: TusNative.heartbeatEvent, body: "")
-  //  }
-  //}()
 
   public override init() {
     tusClient = RNTusClientInstanceHolder.sharedInstance.tusClient!
@@ -45,12 +38,10 @@ class TusNative: RCTEventEmitter {
 
   override func supportedEvents() -> [String]! {
     return [
-      TusNative.uploadInitializedEvent,
       TusNative.uploadStartedEvent,
       TusNative.uploadFinishedEvent,
       TusNative.uploadFailedEvent,
       TusNative.fileErrorEvent,
-      TusNative.totalProgressEvent,
       TusNative.progressForEvent,
       TusNative.heartbeatEvent
     ]
@@ -115,7 +106,6 @@ class TusNative: RCTEventEmitter {
   @objc(createMultipleUploads:resolver:rejecter:)
   func createMultipleUploads(fileUploads: [[String: Any]], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
     var uploads: [[String:Any]] = []
-    tusClient.stopAndCancelAll()
     for fileUpload in fileUploads {
       let fileUrl = fileUpload["fileUrl"] ?? ""
       let options = fileUpload["options"] as? [String: Any] ?? [:]
@@ -149,14 +139,13 @@ class TusNative: RCTEventEmitter {
         uploads += [uploadResult]
       }
     }
-    tusClient.start()
     resolve(uploads)
   }
 
   @objc(startAll:rejecter:)
   func startAll(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-    let remainingUploads = tusClient.start()
-    resolve(remainingUploads)
+    tusClient.startTasks(for: nil)
+    resolve(true)
   }
 
   @objc(sync:rejecter:)
@@ -276,55 +265,34 @@ class TusNative: RCTEventEmitter {
 
 @available(iOS 13.0, *)
 extension TusNative: TUSClientDelegate {
-  func didInitializeUpload(id: UUID, context: [String: String]?, client: TUSClient) {
-    print("TUSClient initialized upload, id is \(id)")
-    print("TUSClient remaining is \(client.remainingUploads)")
-
-    let body: [String:Any] = [
-      "uploadId": "\(id)",
-      "sessionId": "\(client.sessionIdentifier)",
-      "context": context!
-    ]
-    sendEvent(withName: TusNative.uploadInitializedEvent, body: body)
-  }
-
-  func didStartUpload(id: UUID, context: [String: String]?, client: TUSClient) {
-    print("TUSClient started upload, id is \(id)")
-    print("TUSClient remaining is \(client.remainingUploads)")
-
-    let body: [String:Any] = [
-      "uploadId": "\(id)",
-      "sessionId": "\(client.sessionIdentifier)",
-      "context": context!
-    ]
-    sendEvent(withName: TusNative.uploadStartedEvent, body: body)
-  }
-
-  func didFinishUpload(id: UUID, url: URL, context: [String: String]?, client: TUSClient) {
-    print("TUSClient finished upload, id is \(id) url is \(url)")
-    print("TUSClient remaining is \(client.remainingUploads)")
-    if client.remainingUploads == 0 {
-      print("Finished uploading")
+  func didStartUpload(id: UUID, context: [String: String]?) {
+        print("TUSClient started upload, id is \(id)")
+        
+        let body: [String:Any] = [
+            "uploadId": "\(id)",
+            "context": context!
+        ]
+        sendEvent(withName: TusNative.uploadStartedEvent, body: body)
     }
-    let body: [String:Any] = [
-      "uploadId": "\(id)",
-      "url": "\(url)",
-      "sessionId": "\(client.sessionIdentifier)",
-      "context": context!
-    ]
-    sendEvent(withName: TusNative.uploadFinishedEvent, body: body)
-  }
-
-  func uploadFailed(id: UUID, error: Error, context: [String: String]?, client: TUSClient) {
-    print("TUSClient upload failed for \(id) error \(error)")
-    let body: [String:Any] = [
-      "uploadId": "\(id)",
-      "sessionId": "\(client.sessionIdentifier)",
-      "error": error,
-      "context": context!
-    ]
-    sendEvent(withName: TusNative.uploadFailedEvent, body: body)
-  }
+    
+    func didFinishUpload(id: UUID, context: [String: String]?) {
+        print("TUSClient finished upload, id is \(id)")
+        let body: [String:Any] = [
+            "uploadId": "\(id)",
+            "context": context!
+        ]
+        sendEvent(withName: TusNative.uploadFinishedEvent, body: body)
+    }
+    
+    func uploadFailed(id: UUID, error: Error, context: [String: String]?) {
+        print("TUSClient upload failed for \(id) error \(error)")
+        let body: [String:Any] = [
+            "uploadId": "\(id)",
+            "error": error,
+            "context": context!
+        ]
+        sendEvent(withName: TusNative.uploadFailedEvent, body: body)
+    }
 
   func fileError(error: TUSClientError, client: TUSClient) {
     print("TUSClient File error \(error)")
@@ -334,17 +302,6 @@ extension TusNative: TUSClientDelegate {
     ]
     sendEvent(withName: TusNative.fileErrorEvent, body: body)
   }
-
-
-  func totalProgress(bytesUploaded: Int, totalBytes: Int, client: TUSClient) {
-    let body: [String:Any] = [
-      "bytesUploaded": bytesUploaded,
-      "totalBytes": totalBytes,
-      "sessionId": "\(client.sessionIdentifier)"
-    ]
-    sendEvent(withName: TusNative.totalProgressEvent, body: body)
-  }
-
 
   func progressFor(id: UUID, context: [String: String]?, bytesUploaded: Int, totalBytes: Int, client: TUSClient) {
     let body: [String:Any] = [
