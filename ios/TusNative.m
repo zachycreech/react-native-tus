@@ -19,9 +19,6 @@ maxConcurrentUploadsNoWifi:(int)maxConcurrentUploadsNoWifi
 
 @interface RCT_EXTERN_MODULE(TusNative, RCTEventEmitter)
 
-RCT_EXTERN_METHOD(getRemainingUploads:(RCTPromiseResolveBlock)resolve
-                     rejecter:(RCTPromiseRejectBlock)reject)
-
 RCT_EXTERN_METHOD(getInfo:(RCTPromiseResolveBlock)resolve
                      rejecter:(RCTPromiseRejectBlock)reject)
 

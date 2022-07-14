@@ -13,7 +13,7 @@ export type UploadFinishedListenerType = (arg0: UploadFinishedDataType) => void;
 
 export type UploadFailedDataType = {
   uploadId: string;
-  error: Error;
+  error: string;
   context?: any;
 };
 export type UploadFailedListenerType = (arg0: UploadFailedDataType) => void;

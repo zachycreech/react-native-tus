@@ -54,12 +54,6 @@ class TusNative: RCTEventEmitter {
   @objc func sendHeartbeat() {
     self.sendEvent(withName: TusNative.heartbeatEvent, body: "")
   }
-  
-  @objc(getRemainingUploads:rejecter:)
-  func getRemainingUploads(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-    let remainingUploads = tusClient.getRemainingUploads()
-    resolve(remainingUploads)
-  }
 
   @objc(getInfo:rejecter:)
   func getInfo(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {

@@ -33,9 +33,6 @@ type Options = {
 // events.addFileErrorListener((param) => console.log('File Error: ', param));
 // events.addProgressForListener((param) => console.log('Progress For: ', param));
 
-export const getRemainingUploads = (): Promise<any> =>
-  TusNative.getRemainingUploads();
-
 export const getInfo = (): Promise<GetInfoResponse> => TusNative.getInfo();
 
 /**
@@ -143,16 +140,6 @@ export class Upload {
     return this.uploadId;
   }
 
-  async findPreviousUploads() {
-    const previousUploads = await getRemainingUploads();
-    return previousUploads
-      ? previousUploads.filter(
-          (upload: { context?: { metadata?: { name?: string } } }) =>
-            upload?.context?.metadata?.name === this.options?.metadata?.name
-        )
-      : [];
-  }
-
   async resumeFromPreviousUpload(previousUpload: any) {
     this.uploadId = previousUpload?.id;
     startSelection([this.uploadId]);
@@ -186,7 +173,7 @@ export class Upload {
       events.addUploadFailedListener(
         ({ uploadId, error }: UploadFailedDataType) => {
           if (uploadId === this.uploadId) {
-            this.onError(error);
+            this.onError(new Error(error));
           }
         }
       )
