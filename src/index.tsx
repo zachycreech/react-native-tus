@@ -75,18 +75,6 @@ export class Upload {
     this.subscriptions = [];
   }
 
-  async createUpload() {
-    const { metadata, headers, endpoint } = this.options;
-    const settings = { metadata, headers, endpoint };
-    try {
-      this.uploadId = await TusNative.createUpload(this.file, settings);
-
-      this.subscribe();
-    } catch (err) {
-      this.emitError(err);
-    }
-  }
-
   async abort() {
     try {
       TusNative.cancelByIds([this.uploadId]);
@@ -101,27 +89,6 @@ export class Upload {
     } else {
       throw error;
     }
-  }
-
-  async start() {
-    if (!this.file) {
-      console.log(new Error('tus: no file or stream to upload provided'));
-      return;
-    }
-    if (!this.options.endpoint) {
-      console.log(new Error('tus: no endpoint provided'));
-      return;
-    }
-    if (this.uploadId) {
-      return this.uploadId;
-    }
-
-    try {
-      await this.createUpload();
-    } catch (err) {
-      this.emitError(err);
-    }
-    return this.uploadId;
   }
 
   async resumeFromPreviousUpload(previousUpload: any) {

@@ -72,29 +72,6 @@ class TusNative: RCTEventEmitter {
     return fileToBeUploaded
   }
 
-  @objc(createUpload:options:resolver:rejecter:)
-  func createUpload(fileUrl: String, options: [String : Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-    let fileToBeUploaded: URL = buildFileUrl(fileUrl: fileUrl)
-    let endpoint: String = options["endpoint"]! as? String ?? ""
-    let headers = options["headers"]! as? [String: String] ?? [:]
-    let metadata = options["metadata"]! as? [String: String] ?? [:]
-    let startNow = options["startNow"]! as? Bool ?? true
-
-    do {
-      let uploadId = try tusClient.uploadFileAt(
-        filePath: fileToBeUploaded,
-        uploadURL: URL(string: endpoint)!,
-        customHeaders: headers,
-        context: metadata,
-        startNow: startNow
-      )
-      resolve( "\(uploadId)" )
-    } catch {
-      print("Unable to create upload: \(error)")
-      reject("UPLOAD_ERROR", "Unable to create upload", error)
-    }
-  }
-
   @objc(createMultipleUploads:resolver:rejecter:)
   func createMultipleUploads(fileUploads: [[String: Any]], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
     var uploads: [[String:Any]] = []
