@@ -159,17 +159,6 @@ class TusNative: RCTEventEmitter {
     resolve(NSNull())
   }
 
-  @objc(pauseById:resolver:rejecter:)
-  func pauseById(uploadId: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-    do {
-      let id = UUID(uuidString: uploadId)!
-      try tusClient.cancel(id: id)
-      resolve(NSNull())
-    } catch {
-      reject("PAUSE_ERROR", "Unexpected error", error)
-    }
-  }
-
   @objc(cancelAll:rejecter:)
   func cancelAll(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
     do {

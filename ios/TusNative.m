@@ -41,10 +41,6 @@ RCT_EXTERN_METHOD(startSelection:(NSDictionary *)uploadIds
 RCT_EXTERN_METHOD(pauseAll:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(pauseById:(NSString *)uploadId
-                  resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
-
 RCT_EXTERN_METHOD(cancelAll:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 

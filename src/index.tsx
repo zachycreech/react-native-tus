@@ -43,9 +43,6 @@ export const startSelection = (uploadIds: string[]): Promise<any> =>
 
 export const pauseAll = (): Promise<any> => TusNative.pauseAll();
 
-export const pauseById = (uploadId: string): Promise<any> =>
-  TusNative.pauseById(uploadId);
-
 export const cancelAll = (): Promise<any> => TusNative.cancelAll();
 
 export const cancelById = (uploadId: string): Promise<any> =>
