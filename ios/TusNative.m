@@ -29,10 +29,6 @@ RCT_EXTERN_METHOD(createMultipleUploads:(NSArray *)fileUploads
 RCT_EXTERN_METHOD(startAll:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(startSelection:(NSDictionary *)uploadIds
-                     resolver:(RCTPromiseResolveBlock)resolve
-                     rejecter:(RCTPromiseRejectBlock)reject)
-
 RCT_EXTERN_METHOD(pauseAll:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 

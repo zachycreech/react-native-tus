@@ -38,9 +38,6 @@ export const startAll = (): Promise<boolean> => TusNative.startAll();
 
 export const sync = (): Promise<SyncResponse> => TusNative.sync();
 
-export const startSelection = (uploadIds: string[]): Promise<any> =>
-  TusNative.startSelection(uploadIds);
-
 export const pauseAll = (): Promise<any> => TusNative.pauseAll();
 
 export const cancelAll = (): Promise<any> => TusNative.cancelAll();
@@ -89,11 +86,6 @@ export class Upload {
     } else {
       throw error;
     }
-  }
-
-  async resumeFromPreviousUpload(previousUpload: any) {
-    this.uploadId = previousUpload?.id;
-    startSelection([this.uploadId]);
   }
 
   onSuccess(uploadId: string) {

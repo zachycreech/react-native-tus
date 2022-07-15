@@ -122,14 +122,7 @@ class TusNative: RCTEventEmitter {
     let updates = tusClient.sync()
     resolve(updates)
   }
-
-  @objc(startSelection:resolver:rejecter:)
-  func startSelection(uploadIds: [String], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-    let taskIds = uploadIds.map { UUID(uuidString: $0)! }
-    tusClient.start(taskIds: taskIds)
-    resolve(NSNull())
-  }
-
+  
   @objc(pauseAll:rejecter:)
   func pauseAll(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
     tusClient.stopAndCancelAll()
