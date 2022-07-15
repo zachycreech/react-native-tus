@@ -48,9 +48,6 @@ export const cancelAll = (): Promise<any> => TusNative.cancelAll();
 export const cancelByIds = (uploadIds: string[]): Promise<any> =>
   TusNative.cancelByIds(uploadIds);
 
-export const retryById = (uploadId: string): Promise<any> =>
-  TusNative.retryById(uploadId);
-
 /**
  * @returns true if no errors
  */
