@@ -45,9 +45,6 @@ export const pauseAll = (): Promise<any> => TusNative.pauseAll();
 
 export const cancelAll = (): Promise<any> => TusNative.cancelAll();
 
-export const cancelById = (uploadId: string): Promise<any> =>
-  TusNative.cancelById(uploadId);
-
 export const cancelByIds = (uploadIds: string[]): Promise<any> =>
   TusNative.cancelByIds(uploadIds);
 
@@ -95,7 +92,7 @@ export class Upload {
 
   async abort() {
     try {
-      TusNative.cancelById(this.uploadId);
+      TusNative.cancelByIds([this.uploadId]);
     } catch (err) {
       this.emitError(err);
     }

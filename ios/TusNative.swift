@@ -169,18 +169,6 @@ class TusNative: RCTEventEmitter {
     }
   }
 
-  @objc(cancelById:resolver:rejecter:)
-  func cancelById(uploadId: String, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-    do {
-      let id = UUID(uuidString: uploadId)!
-      try tusClient.cancel(id: id)
-      try tusClient.removeCacheFor(id: id)
-      resolve(NSNull())
-    } catch {
-      reject("CANCEL_ERROR", "Unexpected error", error)
-    }
-  }
-
   @objc(cancelByIds:resolver:rejecter:)
   func cancelByIds(uploadIds: [String], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
     do {
