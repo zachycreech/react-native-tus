@@ -76,78 +76,9 @@ class TusNative: RCTEventEmitter {
         resolve(info)
     }
     
-    func buildFileUrl(fileUrl: String) -> URL {
-        let fileToBeUploaded: URL
-        if (fileUrl.starts(with: "file:///") || fileUrl.starts(with: "/var/") || fileUrl.starts(with: "/private/var/")) {
-            fileToBeUploaded = URL(string: fileUrl)!
-        } else {
-            let fileManager = FileManager.default
-            let docUrl = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
-            let appContainer = docUrl.deletingLastPathComponent()
-            fileToBeUploaded = appContainer.appendingPathComponent(fileUrl)
-        }
-        return fileToBeUploaded
-    }
-    
-    @objc(createUpload:options:resolver:rejecter:)
-    func createUpload(fileUrl: String, options: [String : Any], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        let fileToBeUploaded: URL = buildFileUrl(fileUrl: fileUrl)
-        let endpoint: String = options["endpoint"]! as? String ?? ""
-        let headers = options["headers"]! as? [String: String] ?? [:]
-        let metadata = options["metadata"]! as? [String: String] ?? [:]
-        let startNow = options["startNow"]! as? Bool ?? true
-        
-        do {
-            let uploadId = try tusClient.uploadFile(
-                filePath: fileToBeUploaded,
-                uploadURL: URL(string: endpoint)!,
-                customHeaders: headers,
-                context: metadata,
-                startNow: startNow
-            )
-            resolve( "\(uploadId)" )
-        } catch {
-            print("Unable to create upload: \(error)")
-            reject("UPLOAD_ERROR", "Unable to create upload", error)
-        }
-    }
-    
-    @objc(createMultipleUploads:resolver:rejecter:)
-    func createMultipleUploads(fileUploads: [[String: Any]], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
-        var uploads: [[String:Any]] = []
-        for fileUpload in fileUploads {
-            let fileUrl = fileUpload["fileUrl"] ?? ""
-            let options = fileUpload["options"] as? [String: Any] ?? [:]
-            let fileToBeUploaded: URL = buildFileUrl(fileUrl: fileUrl as! String)
-            let endpoint: String = options["endpoint"]! as? String ?? ""
-            let headers = options["headers"]! as? [String: String] ?? [:]
-            let metadata = options["metadata"]! as? [String: String] ?? [:]
-            
-            do {
-                let uploadId = try tusClient.uploadFile(
-                    filePath: fileToBeUploaded,
-                    uploadURL: URL(string: endpoint)!,
-                    customHeaders: headers,
-                    context: metadata,
-                    startNow: false
-                )
-                let uploadResult = [
-                    "status": "success",
-                    "uploadId":"\(uploadId)",
-                    "fileUrl": fileUrl
-                ]
-                uploads += [uploadResult]
-            } catch {
-                print("Unable to create upload: \(error)")
-                let uploadResult = [
-                    "status": "failure",
-                    "err": error,
-                    "uploadId": "",
-                    "fileUrl": fileUrl
-                ]
-                uploads += [uploadResult]
-            }
-        }
+    @objc(uploadFiles:resolver:rejecter:)
+    func uploadFiles(fileUploads: [[String: Any]], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        let uploads = tusClient.uploadFiles(fileUploads: fileUploads)
         resolve(uploads)
     }
     

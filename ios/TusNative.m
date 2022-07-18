@@ -22,7 +22,7 @@ maxConcurrentUploadsNoWifi:(int)maxConcurrentUploadsNoWifi
 RCT_EXTERN_METHOD(getInfo:(RCTPromiseResolveBlock)resolve
                      rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(createMultipleUploads:(NSArray *)fileUploads
+RCT_EXTERN_METHOD(uploadFiles:(NSArray *)fileUploads
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 

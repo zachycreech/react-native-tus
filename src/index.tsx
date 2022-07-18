@@ -28,7 +28,7 @@ export const retryByIds = (uploadIds: string[]): Promise<RetryByIdsResponse> =>
 export const createBatchUpload = (
   uploads: BatchUploadRequestItem[]
 ): Promise<BatchUploadRequestResponse> =>
-  TusNative.createMultipleUploads(uploads);
+  TusNative.uploadFiles(uploads);
 
 export * from './types';
 export default { events };
