@@ -6,17 +6,13 @@ import {
   Image,
   ScrollView,
   SafeAreaView,
-  Alert,
 } from 'react-native';
 import asyncBatch from 'async-batch';
 import * as ImagePicker from 'react-native-image-picker';
 import DocumentPicker from 'react-native-document-picker';
 import {DataTable} from 'react-native-paper';
 import RNFS from 'react-native-fs';
-import TusUpload, {
-  createBatchUpload,
-  scheduleBackgroundTasks,
-} from '@zachywheeler/react-native-tus';
+import TusUpload, {createBatchUpload} from '@zachywheeler/react-native-tus';
 
 /**
  * Given an absolute path returns relative path (remaining path after application ID)
@@ -77,11 +73,22 @@ export default function App() {
       10,
     )
       .then((uploadObjects: any[]) => {
-        return uploadObjects.length > 0 ? createBatchUpload(uploadObjects) : '';
+        return uploadObjects.length > 0
+          ? createBatchUpload(uploadObjects)
+          : Promise.resolve();
       })
-      .then(async () => {
-        const bgUploadsScheduled = await scheduleBackgroundTasks();
-        Alert.alert(`Scheduled background tasks: ${bgUploadsScheduled}`);
+      .then((createdUploads: any[]) => {
+        setUploadResult((oldResult: any) => {
+          let newResult = {...oldResult};
+          createdUploads.forEach((createdUpload: any) => {
+            const {uploadId} = createdUpload;
+            newResult[uploadId] = {
+              uploadId,
+              status: 'Initialized',
+            };
+          });
+          return newResult;
+        });
       })
       .catch(e => {
         console.log('Error during creating uploads: ', e);
@@ -90,39 +97,8 @@ export default function App() {
 
   React.useEffect(() => {
     let listeners: EventSubscription[] = [];
-    const uploadInitializedListener =
-      TusUpload.events.addUploadInitializedListener(param => {
-        // console.log(`Upload started: `, param);
-        const {uploadId} = param;
-        setUploadResult((oldResult: any) => {
-          let newResult = {...oldResult};
-          newResult[uploadId] = {
-            uploadId,
-            status: 'Initialized',
-          };
-          return newResult;
-        });
-      });
-    listeners.push(uploadInitializedListener);
-    const uploadStartedListener = TusUpload.events.addUploadStartedListener(
-      param => {
-        // console.log(`Upload started: `, param);
-        const {uploadId} = param;
-        setUploadResult((oldResult: any) => {
-          let newResult = {...oldResult};
-          newResult[uploadId] = {
-            uploadId,
-            status: 'Started',
-          };
-          return newResult;
-        });
-      },
-    );
-    listeners.push(uploadStartedListener);
-
     const uploadFinishedListener = TusUpload.events.addUploadFinishedListener(
       param => {
-        // console.log(`Upload started: `, param);
         const {uploadId} = param;
         setUploadResult((oldResult: any) => {
           let newResult = {...oldResult};
@@ -138,7 +114,6 @@ export default function App() {
 
     const uploadFailedListener = TusUpload.events.addUploadFailedListener(
       param => {
-        // console.log(`Upload started: `, param);
         const {uploadId} = param;
         setUploadResult((oldResult: any) => {
           let newResult = {...oldResult};
@@ -158,13 +133,6 @@ export default function App() {
     // listeners.push(fileErrorListener);
 
     // Progress events can get a bit spammy
-    // const totalProgressListener = TusUpload.events.addTotalProgressListener(
-    //   (param) => {
-    //     console.log('Total Progress: ', param);
-    //   }
-    // );
-    // listeners.push(totalProgressListener);
-
     // const progressForListener = TusUpload.events.addProgressForListener(
     //   (param) => {
     //     console.log('Progress For: ', param);

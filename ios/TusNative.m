@@ -7,69 +7,36 @@ typedef struct FileUploads {
 
 @implementation RNTusClientBridgeInstanceHolder
 
-+ (void)initializeBackgroundClient:(int)chunkSize maxConcurrentUploads:(int)maxConcurrentUploads {
-  [[RNTusClientInstanceHolder sharedInstance] initializeBackgroundClient:(int)chunkSize maxConcurrentUploads:(int)maxConcurrentUploads];
-}
-
-+ (void)scheduleBackgroundTasks {
-  [[RNTusClientInstanceHolder sharedInstance] scheduleBackgroundTasks];
++ (void)initSession:(int)chunkSize maxConcurrentUploadsWifi:(int)maxConcurrentUploadsWifi
+maxConcurrentUploadsNoWifi:(int)maxConcurrentUploadsNoWifi
+    completionHandler:(void (^)(void))completionHandler {
+  [[RNTusClientInstanceHolder sharedInstance] initSession:(int)chunkSize maxConcurrentUploadsWifi:(int)maxConcurrentUploadsWifi
+   maxConcurrentUploadsNoWifi:(int)maxConcurrentUploadsNoWifi
+                                        completionHandler:(void (^)(void))completionHandler];
 }
 
 @end
 
 @interface RCT_EXTERN_MODULE(TusNative, RCTEventEmitter)
 
-RCT_EXTERN_METHOD(getRemainingUploads:(RCTPromiseResolveBlock)resolve
-                     rejecter:(RCTPromiseRejectBlock)reject)
-
 RCT_EXTERN_METHOD(getInfo:(RCTPromiseResolveBlock)resolve
                      rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(createUpload:(NSString *)fileUrl
-                  options:(NSDictionary *)options
+RCT_EXTERN_METHOD(uploadFiles:(NSArray *)fileUploads
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(createMultipleUploads:(NSArray *)fileUploads
-                  resolver:(RCTPromiseResolveBlock)resolve
+RCT_EXTERN_METHOD(start:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(scheduleBackgroundTasks:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(startAll:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
-
+                  
 RCT_EXTERN_METHOD(sync:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
+            rejecter:(RCTPromiseRejectBlock)reject)
+             
 
-RCT_EXTERN_METHOD(startSelection:(NSDictionary *)uploadIds
-                     resolver:(RCTPromiseResolveBlock)resolve
-                     rejecter:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(pauseAll:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(pauseById:(NSString *)uploadId
-                  resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(pauseByIds:(NSArray *)uploadIds
-                  resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(cancelAll:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(cancelById:(NSString *)uploadId
-                  resolver:(RCTPromiseResolveBlock)resolve
+RCT_EXTERN_METHOD(pause:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(cancelByIds:(NSArray *)uploadIds
-                  resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(retryById:(NSString *)uploadId
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
@@ -77,6 +44,4 @@ RCT_EXTERN_METHOD(retryByIds:(NSArray *)uploadIds
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(getFailedUploadIds:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
 @end

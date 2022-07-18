@@ -40,25 +40,8 @@ export default function App() {
 
   React.useEffect(() => {
     let listeners: EventSubscription[] = [];
-    const uploadStartedListener = TusUpload.events.addUploadStartedListener(
-      param => {
-        // console.log(`Upload started: `, param);
-        const {uploadId} = param;
-        setUploadResult((oldResult: any) => {
-          let newResult = {...oldResult};
-          newResult[uploadId] = {
-            uploadId,
-            status: 'Started',
-          };
-          return newResult;
-        });
-      },
-    );
-    listeners.push(uploadStartedListener);
-
     const uploadFinishedListener = TusUpload.events.addUploadFinishedListener(
       param => {
-        // console.log(`Upload started: `, param);
         const {uploadId} = param;
         setUploadResult((oldResult: any) => {
           let newResult = {...oldResult};
@@ -74,7 +57,6 @@ export default function App() {
 
     const uploadFailedListener = TusUpload.events.addUploadFailedListener(
       param => {
-        // console.log(`Upload started: `, param);
         const {uploadId} = param;
         setUploadResult((oldResult: any) => {
           let newResult = {...oldResult};
@@ -94,13 +76,6 @@ export default function App() {
     // listeners.push(fileErrorListener);
 
     // Progress events can get a bit spammy
-    // const totalProgressListener = TusUpload.events.addTotalProgressListener(
-    //   (param) => {
-    //     console.log('Total Progress: ', param);
-    //   }
-    // );
-    // listeners.push(totalProgressListener);
-
     // const progressForListener = TusUpload.events.addProgressForListener(
     //   (param) => {
     //     console.log('Progress For: ', param);

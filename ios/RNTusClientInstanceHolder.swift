@@ -7,6 +7,7 @@
 import Foundation
 import TUSKit
 
+@available(iOS 13.4, *)
 @objcMembers
 public final class RNTusClientInstanceHolder : NSObject {
 
@@ -14,52 +15,25 @@ public final class RNTusClientInstanceHolder : NSObject {
 
     public var tusClient: TUSClient?
 
-    public func initializeBackgroundClient(_ chunkSize: Int, maxConcurrentUploads: Int) {
-        print( "initializing BG Client")
+    public func initSession(_ chunkSize: Int, maxConcurrentUploadsWifi: Int, maxConcurrentUploadsNoWifi: Int, completionHandler: (() -> Void)?) {
+        print("initializing TUSClient")
         if tusClient == nil {
-            let sessionId = "TUS BG Session"
-
-            // TODO: See if Background URL Session support can be added to TUSKit
-            // let bgUrlSessionConfig = URLSessionConfiguration.background(withIdentifier: sessionId)
-            // bgUrlSessionConfig.isDiscretionary = false
-            // let bgUrlSession = URLSession(configuration: bgUrlSessionConfig)
-
-            let urlSessionConfig = URLSessionConfiguration.default
-            // Restrict maximum parallel connections to 2
-            urlSessionConfig.httpMaximumConnectionsPerHost = 2
-            // 60 Second timeout (resets if data transmitted)
-            urlSessionConfig.timeoutIntervalForRequest = 60
-            // Wait for connection instead of failing immediately
-            urlSessionConfig.waitsForConnectivity = true
-            // Dont' let system decide when to start the task
-            urlSessionConfig.isDiscretionary = false
-            let urlSession = URLSession(configuration: urlSessionConfig)
-
+            let sessionId = "io.tus.uploading"
             let tusClient = try! TUSClient(
                 server: URL(string: "http://localhost/files")!,
                 sessionIdentifier: sessionId,
                 storageDirectory: URL(string: "TUS/background")!,
-                session: urlSession,
                 chunkSize: chunkSize,
-                maxConcurrentUploads: maxConcurrentUploads
+                maxConcurrentUploadsWifi: maxConcurrentUploadsWifi,
+                maxConcurrentUploadsNoWifi: maxConcurrentUploadsNoWifi,
+                backgroundSessionCompletionHandler: completionHandler
             )
 #if DEBUG
-            try! tusClient.reset()
+            try! tusClient.cancelByIds(uuids: nil)
 #endif
-
-            if #available(iOS 13, *) {
-                print("TUSClient attempting to register for background tasks")
-                tusClient.registerForBackgroundTasks()
-            }
-
             RNTusClientInstanceHolder.sharedInstance.tusClient = tusClient
-        }
-    }
-
-    public func scheduleBackgroundTasks() {
-        if #available(iOS 13, *) {
-            print("TUSClient attempting to schedule background tasks")
-            RNTusClientInstanceHolder.sharedInstance.tusClient!.scheduleBackgroundTasks()
+        } else {
+            RNTusClientInstanceHolder.sharedInstance.tusClient?.backgroundSessionCompletionHandler = completionHandler
         }
     }
 }

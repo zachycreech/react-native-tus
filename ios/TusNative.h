@@ -2,6 +2,9 @@
 #import <React/RCTEventEmitter.h>
 
 @interface RNTusClientBridgeInstanceHolder : NSObject
-+ (void)initializeBackgroundClient:(int)chunkSize maxConcurrentUploads:(int)maxConcurrentUploads;
-+ (void)scheduleBackgroundTasks;
+
++ (void)initSession:(int)chunkSize maxConcurrentUploadsWifi:(int)maxConcurrentUploadsWifi
+ maxConcurrentUploadsNoWifi:(int)maxConcurrentUploadsNoWifi
+  completionHandler:(void (^)(void))completionHandler;
+
 @end
