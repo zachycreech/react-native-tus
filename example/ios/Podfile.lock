@@ -294,7 +294,7 @@ PODS:
     - React-Core
   - RNVectorIcons (9.1.0):
     - React-Core
-  - TUSKit (3.2.1)
+  - TUSKit (4.0.0)
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -455,7 +455,7 @@ SPEC CHECKSUMS:
   ReactCommon: fab89a13b52f1ac42b59a0e4b4f76f21aea9eebe
   RNFS: fc610f78fdf8bfc89a9e5cc2f898519f4dba1002
   RNVectorIcons: 7923e585eaeb139b9f4531d25a125a1500162a0b
-  TUSKit: fd05ff6120cc6c92a76d56d2558b259c0d1460b1
+  TUSKit: 59824f2d83905dcd3f88fe23e16ce218a6e2e429
   Yoga: 6671cf077f614314c22fd09ddf87d7abeee64e96
 
 PODFILE CHECKSUM: 72c720a629c54a043a4081d526207fe294b3a143
