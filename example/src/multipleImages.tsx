@@ -6,7 +6,6 @@ import {
   Image,
   ScrollView,
   SafeAreaView,
-  Alert,
 } from 'react-native';
 import asyncBatch from 'async-batch';
 import * as ImagePicker from 'react-native-image-picker';

@@ -5,6 +5,7 @@ import type {
   FileErrorListenerType,
   ProgressForListenerType,
   HeartbeatListenerType,
+  CancelFinishedListenerType,
 } from './types';
 
 import { emitter } from './nativeBridge';
@@ -17,6 +18,13 @@ function addUploadFinishedListener(listener: UploadFinishedListenerType) {
 }
 
 /**
+ * Cancel finished 
+ */
+ function addCancelFinishedListener(listener: CancelFinishedListenerType) {
+  return emitter.addListener(EVENTS.CANCEL_FINISHED_EVENT, listener);
+}
+
+/**
  * Upload failed including any preset automatic retries
  */
 function addUploadFailedListener(listener: UploadFailedListenerType) {
@@ -24,7 +32,7 @@ function addUploadFailedListener(listener: UploadFailedListenerType) {
 }
 
 /**
- * I really don't know what this does. Please fill in if you figure it out
+ * Handle errors related to read/write of metadata file
  */
 function addFileErrorListener(listener: FileErrorListenerType) {
   return emitter.addListener(EVENTS.FILE_ERROR_EVENT, listener);
@@ -45,6 +53,7 @@ function addHeartbeatListener(listener: HeartbeatListenerType) {
 }
 
 export default {
+  addCancelFinishedListener,
   addUploadFinishedListener,
   addUploadFailedListener,
   addFileErrorListener,

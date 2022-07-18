@@ -29,7 +29,7 @@ public final class RNTusClientInstanceHolder : NSObject {
                 backgroundSessionCompletionHandler: completionHandler
             )
 #if DEBUG
-            try! tusClient.reset()
+            try! tusClient.cancelByIds(uuids: nil)
 #endif
             RNTusClientInstanceHolder.sharedInstance.tusClient = tusClient
         } else {

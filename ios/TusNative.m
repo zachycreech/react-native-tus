@@ -26,13 +26,14 @@ RCT_EXTERN_METHOD(createMultipleUploads:(NSArray *)fileUploads
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(startAll:(RCTPromiseResolveBlock)resolve
+RCT_EXTERN_METHOD(start:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
+                  
+RCT_EXTERN_METHOD(sync:(RCTPromiseResolveBlock)resolve
+            rejecter:(RCTPromiseRejectBlock)reject)
+             
 
-RCT_EXTERN_METHOD(pauseAll:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
-
-RCT_EXTERN_METHOD(cancelAll:(RCTPromiseResolveBlock)resolve
+RCT_EXTERN_METHOD(pause:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(cancelByIds:(NSArray *)uploadIds
@@ -43,6 +44,4 @@ RCT_EXTERN_METHOD(retryByIds:(NSArray *)uploadIds
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(getFailedUploadIds:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
 @end

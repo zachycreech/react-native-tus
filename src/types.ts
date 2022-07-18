@@ -4,6 +4,11 @@ export type UploadFinishedDataType = {
 };
 export type UploadFinishedListenerType = (arg0: UploadFinishedDataType) => void;
 
+export type CancelFinishedDataType = {
+  errorMessage?: string;
+};
+export type CancelFinishedListenerType = (arg0: CancelFinishedDataType) => void;
+
 export type UploadFailedDataType = {
   uploadId: string;
   error: string;
@@ -21,7 +26,6 @@ export type ProgressForDataType = {
   uploadId: string;
   bytesUploaded: number;
   totalBytes: number;
-  sessionId: string;
   context?: any;
 };
 export type ProgressForListenerType = (arg0: ProgressForDataType) => void;
