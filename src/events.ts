@@ -18,9 +18,9 @@ function addUploadFinishedListener(listener: UploadFinishedListenerType) {
 }
 
 /**
- * Cancel finished 
+ * Cancel finished
  */
- function addCancelFinishedListener(listener: CancelFinishedListenerType) {
+function addCancelFinishedListener(listener: CancelFinishedListenerType) {
   return emitter.addListener(EVENTS.CANCEL_FINISHED_EVENT, listener);
 }
 
