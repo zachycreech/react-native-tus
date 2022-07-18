@@ -75,7 +75,22 @@ export default function App() {
       10,
     )
       .then((uploadObjects: any[]) => {
-        return uploadObjects.length > 0 ? createBatchUpload(uploadObjects) : '';
+        return uploadObjects.length > 0
+          ? createBatchUpload(uploadObjects)
+          : Promise.resolve();
+      })
+      .then((createdUploads: any[]) => {
+        setUploadResult((oldResult: any) => {
+          let newResult = {...oldResult};
+          createdUploads.forEach((createdUpload: any) => {
+            const {uploadId} = createdUpload;
+            newResult[uploadId] = {
+              uploadId,
+              status: 'Initialized',
+            };
+          });
+          return newResult;
+        });
       })
       .catch(e => {
         console.log('Error during creating uploads: ', e);

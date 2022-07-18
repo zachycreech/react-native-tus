@@ -222,7 +222,7 @@ PODS:
     - React-Core
   - react-native-image-picker (4.7.3):
     - React-Core
-  - react-native-tus (0.1.41):
+  - react-native-tus (0.1.42):
     - React-Core
     - TUSKit
   - React-perflogger (0.68.0)
@@ -294,7 +294,7 @@ PODS:
     - React-Core
   - RNVectorIcons (9.1.0):
     - React-Core
-  - TUSKit (3.1.11)
+  - TUSKit (3.2.1)
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -440,7 +440,7 @@ SPEC CHECKSUMS:
   React-logger: 8474fefa09d05f573a13c044cb0dfd751d4e52e3
   react-native-document-picker: 5663fe4bcdb646200683a41790464d2793307ac8
   react-native-image-picker: 4e6008ad8c2321622affa2c85432a5ebd02d480c
-  react-native-tus: 8fcebb7c22494a43b155815941e2da9a168bf92e
+  react-native-tus: 685febbcd4c2be4f59389300ae6dbc965b06e99e
   React-perflogger: 15cb741d6c2379f4d3fc8f9e4d4e1110ef3020cb
   React-RCTActionSheet: ea9099db0597bd769430db1e2d011fd5fdb7fc5e
   React-RCTAnimation: 252df4749866f2654f37612f839522cac91c1165
@@ -455,9 +455,9 @@ SPEC CHECKSUMS:
   ReactCommon: fab89a13b52f1ac42b59a0e4b4f76f21aea9eebe
   RNFS: fc610f78fdf8bfc89a9e5cc2f898519f4dba1002
   RNVectorIcons: 7923e585eaeb139b9f4531d25a125a1500162a0b
-  TUSKit: 4d61c3865e3c3fa2bea6b80625daeebf9b26ffe0
+  TUSKit: fd05ff6120cc6c92a76d56d2558b259c0d1460b1
   Yoga: 6671cf077f614314c22fd09ddf87d7abeee64e96
 
-PODFILE CHECKSUM: 1f7e6eabf20096b44802b0e3a0bf4e622ea39795
+PODFILE CHECKSUM: 72c720a629c54a043a4081d526207fe294b3a143
 
 COCOAPODS: 1.11.3
