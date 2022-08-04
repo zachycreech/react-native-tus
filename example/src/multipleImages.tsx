@@ -157,7 +157,7 @@ export default function App() {
 
   const documentPickerOptions: any = {
     type: DocumentPicker.types.images,
-    mode: 'import',
+    mode: 'open',
     copyTo: 'documentDirectory',
   };
   return (
