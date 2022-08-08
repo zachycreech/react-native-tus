@@ -133,11 +133,11 @@ export default function App() {
     // listeners.push(fileErrorListener);
 
     // Progress events can get a bit spammy
-    // const progressForListener = TusUpload.events.addProgressForListener(
-    //   (param) => {
-    //     console.log('Progress For: ', param);
-    //   }
-    // );
+    const progressForListener = TusUpload.events.addProgressForListener(
+       (param: any) => {
+         console.log('Progress For: ', param);
+       }
+    );
     // listeners.push(progressForListener);
 
     // const heartbeatListener = TusUpload.events.addHeartbeatListener(() => {
