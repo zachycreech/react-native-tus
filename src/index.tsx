@@ -17,6 +17,8 @@ export const start = (): Promise<boolean> => TusNative.start();
 
 export const sync = (): Promise<SyncResponse> => TusNative.sync();
 
+export const freeMemory = (): Promise<null> => TusNative.freeMemory();
+
 export const pause = (): Promise<null> => TusNative.pause();
 
 export const cancelByIds = (uploadIds: string[]): Promise<any> =>

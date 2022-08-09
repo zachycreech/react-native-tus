@@ -99,6 +99,12 @@ class TusNative: RCTEventEmitter {
         tusClient.pause()
         resolve(NSNull())
     }
+
+    @objc(freeMemory:rejecter:)
+    func freeMemory(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        tusClient.freeMemory()
+        resolve(NSNull())
+    }
     
     @objc(cancelByIds:resolver:rejecter:)
     func cancelByIds(uploadIds: [String], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {

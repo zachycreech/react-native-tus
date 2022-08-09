@@ -32,6 +32,8 @@ RCT_EXTERN_METHOD(start:(RCTPromiseResolveBlock)resolve
 RCT_EXTERN_METHOD(sync:(RCTPromiseResolveBlock)resolve
             rejecter:(RCTPromiseRejectBlock)reject)
              
+RCT_EXTERN_METHOD(freeMemory:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
 
 RCT_EXTERN_METHOD(pause:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
