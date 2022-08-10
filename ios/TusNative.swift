@@ -99,6 +99,12 @@ class TusNative: RCTEventEmitter {
         tusClient.pause()
         resolve(NSNull())
     }
+
+    @objc(freeMemory:rejecter:)
+    func freeMemory(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        tusClient.freeMemory()
+        resolve(NSNull())
+    }
     
     @objc(cancelByIds:resolver:rejecter:)
     func cancelByIds(uploadIds: [String], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
@@ -138,21 +144,19 @@ class TusNative: RCTEventEmitter {
 
 @available(iOS 13.4, *)
 extension TusNative: TUSClientDelegate {
-    func didFinishUpload(id: UUID, context: [String: String]?) {
+    func didFinishUpload(id: UUID) {
         print("TUSClient finished upload, id is \(id)")
         let body: [String:Any] = [
-            "uploadId": "\(id)",
-            "context": context!
+            "uploadId": "\(id)"
         ]
         sendEvent(withName: TusNative.uploadFinishedEvent, body: body)
     }
     
-    func uploadFailed(id: UUID, error: String, context: [String: String]?) {
+    func uploadFailed(id: UUID, error: String) {
         print("TUSClient upload failed for \(id) error \(error)")
         let body: [String:Any] = [
             "uploadId": "\(id)",
-            "error": error,
-            "context": context!
+            "error": error
         ]
         sendEvent(withName: TusNative.uploadFailedEvent, body: body)
     }
@@ -185,12 +189,11 @@ extension TusNative: TUSClientDelegate {
     }
     
     
-    func progressFor(id: UUID, context: [String: String]?, bytesUploaded: Int, totalBytes: Int) {
+    func progressFor(id: UUID, bytesUploaded: Int, totalBytes: Int) {
         let body: [String:Any] = [
             "uploadId": "\(id)",
             "bytesUploaded": bytesUploaded,
-            "totalBytes": totalBytes,
-            "context": context!
+            "totalBytes": totalBytes
         ]
         sendEvent(withName: TusNative.progressForEvent, body: body)
     }
