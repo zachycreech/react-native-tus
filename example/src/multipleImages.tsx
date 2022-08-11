@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  ActivityIndicator,
   StyleSheet,
   View,
   Button,
@@ -37,6 +38,7 @@ export default function App() {
   // @refresh reset
   const [uploadResult, setUploadResult] = React.useState<any>({});
   const [imageResponse, setImageResponse] = React.useState<any>();
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   // const exampleUpload = new Upload(  );
   React.useEffect(() => {
@@ -78,6 +80,7 @@ export default function App() {
           : Promise.resolve();
       })
       .then((createdUploads: any[]) => {
+        setIsLoading(false);
         setUploadResult((oldResult: any) => {
           let newResult = {...oldResult};
           createdUploads.forEach((createdUpload: any) => {
@@ -175,6 +178,7 @@ export default function App() {
         style={styles.button}
         title="open Document picker for multiple file selection"
         onPress={async () => {
+          setIsLoading(true);
           const response = await DocumentPicker.pickMultiple(
             documentPickerOptions,
           );
@@ -184,18 +188,9 @@ export default function App() {
           setImageResponse(mappedResponse);
         }}
       />
-      {imageResponse &&
-        false &&
-        imageResponse.map(({uri}) => (
-          <View key={uri} style={styles.image}>
-            <Image
-              resizeMode="cover"
-              resizeMethod="scale"
-              style={styles.imageSize}
-              source={{uri: uri}}
-            />
-          </View>
-        ))}
+      {isLoading ? (
+        <ActivityIndicator />
+      ): (<></>)}
       <ScrollView>
         <DataTable style={styles.table}>
           <DataTable.Header>
