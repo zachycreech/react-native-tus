@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  ActivityIndicator,
   StyleSheet,
   View,
   Button,
@@ -12,7 +13,7 @@ import * as ImagePicker from 'react-native-image-picker';
 import DocumentPicker from 'react-native-document-picker';
 import {DataTable} from 'react-native-paper';
 import RNFS from 'react-native-fs';
-import TusUpload, {createBatchUpload} from '@zachywheeler/react-native-tus';
+import TusUpload, {createBatchUpload, generateIds} from '@zachywheeler/react-native-tus';
 
 /**
  * Given an absolute path returns relative path (remaining path after application ID)
@@ -37,6 +38,7 @@ export default function App() {
   // @refresh reset
   const [uploadResult, setUploadResult] = React.useState<any>({});
   const [imageResponse, setImageResponse] = React.useState<any>();
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
   // const exampleUpload = new Upload(  );
   React.useEffect(() => {
@@ -61,7 +63,7 @@ export default function App() {
         if (await RNFS.exists(image.uri)) {
           const uploadObject = {
             fileUrl: getRelativePath(image.uri),
-            options: uploadOptions,
+            options: {...uploadOptions},
           };
           return uploadObject;
         } else {
@@ -72,12 +74,21 @@ export default function App() {
       },
       10,
     )
+      .then(async (uploadObjects: any[]) => {
+        const idsToUse = await generateIds(uploadObjects.length);
+        return uploadObjects.map((uploadObject, index) => {
+          let newObject = {...uploadObject};
+          newObject.options.uploadId = idsToUse[index];
+          return newObject;
+        });
+      })
       .then((uploadObjects: any[]) => {
         return uploadObjects.length > 0
           ? createBatchUpload(uploadObjects)
           : Promise.resolve();
       })
       .then((createdUploads: any[]) => {
+        setIsLoading(false);
         setUploadResult((oldResult: any) => {
           let newResult = {...oldResult};
           createdUploads.forEach((createdUpload: any) => {
@@ -175,6 +186,7 @@ export default function App() {
         style={styles.button}
         title="open Document picker for multiple file selection"
         onPress={async () => {
+          setIsLoading(true);
           const response = await DocumentPicker.pickMultiple(
             documentPickerOptions,
           );
@@ -184,18 +196,9 @@ export default function App() {
           setImageResponse(mappedResponse);
         }}
       />
-      {imageResponse &&
-        false &&
-        imageResponse.map(({uri}) => (
-          <View key={uri} style={styles.image}>
-            <Image
-              resizeMode="cover"
-              resizeMethod="scale"
-              style={styles.imageSize}
-              source={{uri: uri}}
-            />
-          </View>
-        ))}
+      {isLoading ? (
+        <ActivityIndicator />
+      ): (<></>)}
       <ScrollView>
         <DataTable style={styles.table}>
           <DataTable.Header>
