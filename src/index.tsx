@@ -10,6 +10,9 @@ import type {
 
 export const getInfo = (): Promise<GetInfoResponse> => TusNative.getInfo();
 
+export const generateIds = (numberToGenerate: Number): Promise<string[]> =>
+  TusNative.generateIds(numberToGenerate);
+
 /**
  * Read any cached files on disk and start upload tasks for them
  */
