@@ -2,9 +2,7 @@ import * as React from 'react';
 import {
   ActivityIndicator,
   StyleSheet,
-  View,
   Button,
-  Image,
   ScrollView,
   SafeAreaView,
 } from 'react-native';
@@ -13,7 +11,10 @@ import * as ImagePicker from 'react-native-image-picker';
 import DocumentPicker from 'react-native-document-picker';
 import {DataTable} from 'react-native-paper';
 import RNFS from 'react-native-fs';
-import TusUpload, {createBatchUpload, generateIds} from '@zachywheeler/react-native-tus';
+import TusUpload, {
+  createBatchUpload,
+  generateIds,
+} from '@zachywheeler/react-native-tus';
 
 /**
  * Given an absolute path returns relative path (remaining path after application ID)
@@ -196,9 +197,7 @@ export default function App() {
           setImageResponse(mappedResponse);
         }}
       />
-      {isLoading ? (
-        <ActivityIndicator />
-      ): (<></>)}
+      {isLoading ? <ActivityIndicator /> : <></>}
       <ScrollView>
         <DataTable style={styles.table}>
           <DataTable.Header>
