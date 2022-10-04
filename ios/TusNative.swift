@@ -14,11 +14,12 @@ class TusNative: RCTEventEmitter {
     static let progressForEvent = "ProgressFor"
     static let heartbeatEvent = "Heartbeat"
     static let cancelFinishedEvent = "CancelFinished"
-    
+    static let freedMemory = "FreedMemory"
+
     let tusClient: TUSClient
     private var heartbeatTimer: Timer!
     private var preventStallTimer: Timer!
-    
+
     public override init() {
         tusClient = RNTusClientInstanceHolder.sharedInstance.tusClient!
         super.init()
@@ -35,7 +36,7 @@ class TusNative: RCTEventEmitter {
         let weakTarget = WeakTarget()
         weakTarget.tusNative = self
         self.heartbeatTimer = Timer.scheduledTimer(timeInterval: 1.0, target: weakTarget, selector: #selector(WeakTarget.sendHeartbeat(timer:)), userInfo: nil, repeats: true)
-        
+
         // Runs every 60 seconds to make sure tasks are running, will retry failed items queue if they are the only items left
         class StallTimerWeakTarget: NSObject {
             weak var tusNative: TusNative?
@@ -49,7 +50,7 @@ class TusNative: RCTEventEmitter {
         stallTimerWeakTarget.tusNative = self
         self.preventStallTimer = Timer.scheduledTimer(timeInterval: 60.0, target: stallTimerWeakTarget, selector: #selector(StallTimerWeakTarget.sendWakeUp(timer:)), userInfo: nil, repeats: true)
     }
-    
+
     override func supportedEvents() -> [String]! {
         return [
             TusNative.uploadFinishedEvent,
@@ -61,33 +62,42 @@ class TusNative: RCTEventEmitter {
             TusNative.cancelFinishedEvent
         ]
     }
-    
+
     override public static func requiresMainQueueSetup() -> Bool {
         return false;
     }
-    
+
     @objc func sendHeartbeat() {
         self.sendEvent(withName: TusNative.heartbeatEvent, body: "")
     }
-    
+
     @objc(getInfo:rejecter:)
     func getInfo(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         let info = tusClient.getInfo()
         resolve(info)
     }
-    
+
+    @objc(generateIds:resolver:rejecter:)
+    func generateIds(amountToGenerate: Int, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        var ids: [String] = []
+        for _ in 1...amountToGenerate {
+            ids.append("\(UUID())")
+        }
+        resolve(ids)
+    }
+
     @objc(uploadFiles:resolver:rejecter:)
     func uploadFiles(fileUploads: [[String: Any]], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         let uploads = tusClient.uploadFiles(fileUploads: fileUploads)
         resolve(uploads)
     }
-    
+
     @objc(start:rejecter:)
     func start(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         tusClient.resume();
         resolve(true)
     }
-    
+
     @objc(sync:rejecter:)
     func sync(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         let updates = tusClient.sync()
@@ -105,7 +115,7 @@ class TusNative: RCTEventEmitter {
         tusClient.freeMemory()
         resolve(NSNull())
     }
-    
+
     @objc(cancelByIds:resolver:rejecter:)
     func cancelByIds(uploadIds: [String], resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         do {
@@ -115,7 +125,7 @@ class TusNative: RCTEventEmitter {
             reject("CANCEL_ERROR", "Unexpected error", error)
         }
     }
-    
+
     /**
      @returns an array of the uploads that were retried and if they were successfully retried or not
      */
@@ -151,7 +161,7 @@ extension TusNative: TUSClientDelegate {
         ]
         sendEvent(withName: TusNative.uploadFinishedEvent, body: body)
     }
-    
+
     func uploadFailed(id: UUID, error: String) {
         print("TUSClient upload failed for \(id) error \(error)")
         let body: [String:Any] = [
@@ -160,7 +170,7 @@ extension TusNative: TUSClientDelegate {
         ]
         sendEvent(withName: TusNative.uploadFailedEvent, body: body)
     }
-    
+
     func fileError(id: String, errorMessage: String) {
           print("TUSClient File error \(errorMessage)")
           let body: [String:Any] = [
@@ -169,7 +179,7 @@ extension TusNative: TUSClientDelegate {
           ]
           sendEvent(withName: TusNative.fileErrorEvent, body: body)
       }
-    
+
     func cancelFinished(errorMessage: String?) {
         print("TUSClient cancel finished \(errorMessage)")
         let body: [String:Any] = [
@@ -177,8 +187,8 @@ extension TusNative: TUSClientDelegate {
         ]
         sendEvent(withName: TusNative.cancelFinishedEvent, body: body)
     }
-    
-    
+
+
     func totalProgress(bytesUploaded: Int, totalBytes: Int, client: TUSClient) {
         let body: [String:Any] = [
             "bytesUploaded": bytesUploaded,
@@ -187,8 +197,8 @@ extension TusNative: TUSClientDelegate {
         ]
         sendEvent(withName: TusNative.totalProgressEvent, body: body)
     }
-    
-    
+
+
     func progressFor(id: UUID, bytesUploaded: Int, totalBytes: Int) {
         let body: [String:Any] = [
             "uploadId": "\(id)",
@@ -197,5 +207,11 @@ extension TusNative: TUSClientDelegate {
         ]
         sendEvent(withName: TusNative.progressForEvent, body: body)
     }
-    
+
+    func freedMemory() {
+        let body: [String:Any] = [
+            "message": "Memory availability low, URLSession invalidated to free clean up memory leak"
+        ]
+        sendEvent(withName: TusNative.freedMemory, body: body)
+    }
 }

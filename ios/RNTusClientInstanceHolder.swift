@@ -36,4 +36,11 @@ public final class RNTusClientInstanceHolder : NSObject {
             RNTusClientInstanceHolder.sharedInstance.tusClient?.backgroundSessionCompletionHandler = completionHandler
         }
     }
+
+    public func freeMemory() {
+        print("resetting TUSClient session")
+        if tusClient != nil {
+          tusClient?.freeMemory()
+        }
+    }
 }

@@ -5,6 +5,7 @@ export const EVENTS = {
   PROGRESS_FOR_EVENT: 'ProgressFor',
   HEARTBEAT_EVENT: 'Heartbeat',
   CANCEL_FINISHED_EVENT: 'CancelFinished',
+  FREED_MEMORY: 'FreedMemory',
 };
 
 export default {
