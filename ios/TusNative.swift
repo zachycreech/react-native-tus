@@ -210,7 +210,7 @@ extension TusNative: TUSClientDelegate {
 
     func freedMemory() {
         let body: [String:Any] = [
-            "message": "Memory availability low, URLSession invalidated to free clean up memory leak"
+            "message": "Memory availability low, URLSession invalidated to clean up memory leak"
         ]
         sendEvent(withName: TusNative.freedMemory, body: body)
     }

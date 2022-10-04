@@ -61,6 +61,7 @@ function addHeartbeatListener(listener: HeartbeatListenerType) {
 
 export default {
   addCancelFinishedListener,
+  addFreedMemoryListener,
   addUploadFinishedListener,
   addUploadFailedListener,
   addFileErrorListener,
