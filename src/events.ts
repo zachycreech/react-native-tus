@@ -52,8 +52,16 @@ function addHeartbeatListener(listener: HeartbeatListenerType) {
   return emitter.addListener(EVENTS.HEARTBEAT_EVENT, listener);
 }
 
+/**
+ * Freed memory events
+ */
+function addFreedMemoryListener(listener: HeartbeatListenerType) {
+  return emitter.addListener(EVENTS.FREED_MEMORY, listener);
+}
+
 export default {
   addCancelFinishedListener,
+  addFreedMemoryListener,
   addUploadFinishedListener,
   addUploadFailedListener,
   addFileErrorListener,

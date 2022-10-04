@@ -7,4 +7,6 @@
  maxConcurrentUploadsNoWifi:(int)maxConcurrentUploadsNoWifi
   completionHandler:(void (^)(void))completionHandler;
 
++ (void)freeMemory;
+
 @end

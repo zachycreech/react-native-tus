@@ -29,6 +29,11 @@ export type ProgressForListenerType = (arg0: ProgressForDataType) => void;
 
 export type HeartbeatListenerType = () => void;
 
+export type FreedMemoryDataType = {
+  message: string;
+};
+export type FreedMemoryListenerType = (arg0: FreedMemoryDataType) => void;
+
 export type BatchUploadRequestItem = {
   fileUrl: string;
   options: {

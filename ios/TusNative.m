@@ -15,6 +15,10 @@ maxConcurrentUploadsNoWifi:(int)maxConcurrentUploadsNoWifi
                                         completionHandler:(void (^)(void))completionHandler];
 }
 
++ (void)freeMemory {
+  [[RNTusClientInstanceHolder sharedInstance] freeMemory];
+}
+
 @end
 
 @interface RCT_EXTERN_MODULE(TusNative, RCTEventEmitter)

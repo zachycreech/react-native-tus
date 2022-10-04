@@ -14,6 +14,7 @@ class TusNative: RCTEventEmitter {
     static let progressForEvent = "ProgressFor"
     static let heartbeatEvent = "Heartbeat"
     static let cancelFinishedEvent = "CancelFinished"
+    static let freedMemory = "FreedMemory"
 
     let tusClient: TUSClient
     private var heartbeatTimer: Timer!
@@ -58,7 +59,8 @@ class TusNative: RCTEventEmitter {
             TusNative.totalProgressEvent,
             TusNative.progressForEvent,
             TusNative.heartbeatEvent,
-            TusNative.cancelFinishedEvent
+            TusNative.cancelFinishedEvent,
+            TusNative.freedMemory
         ]
     }
 
@@ -207,4 +209,10 @@ extension TusNative: TUSClientDelegate {
         sendEvent(withName: TusNative.progressForEvent, body: body)
     }
 
+    func freedMemory() {
+        let body: [String:Any] = [
+            "message": "Memory availability low, URLSession invalidated to clean up memory leak"
+        ]
+        sendEvent(withName: TusNative.freedMemory, body: body)
+    }
 }
