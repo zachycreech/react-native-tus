@@ -55,7 +55,7 @@ function addHeartbeatListener(listener: HeartbeatListenerType) {
 /**
  * Freed memory events
  */
- function addFreedMemoryListener(listener: HeartbeatListenerType) {
+function addFreedMemoryListener(listener: HeartbeatListenerType) {
   return emitter.addListener(EVENTS.FREED_MEMORY, listener);
 }
 
