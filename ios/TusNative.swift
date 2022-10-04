@@ -59,7 +59,8 @@ class TusNative: RCTEventEmitter {
             TusNative.totalProgressEvent,
             TusNative.progressForEvent,
             TusNative.heartbeatEvent,
-            TusNative.cancelFinishedEvent
+            TusNative.cancelFinishedEvent,
+            TusNative.freedMemory
         ]
     }
 
