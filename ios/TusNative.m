@@ -46,6 +46,9 @@ RCT_EXTERN_METHOD(freeMemory:(RCTPromiseResolveBlock)resolve
 RCT_EXTERN_METHOD(pause:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
+RCT_EXTERN_METHOD(updateAuthorizationHeaders:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+
 RCT_EXTERN_METHOD(cancelByIds:(NSArray *)uploadIds
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)

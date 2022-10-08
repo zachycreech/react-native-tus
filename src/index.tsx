@@ -24,6 +24,8 @@ export const freeMemory = (): Promise<null> => TusNative.freeMemory();
 
 export const pause = (): Promise<null> => TusNative.pause();
 
+export const updateAuthorizationHeaders = (): Promise<null> => TusNative.updateAuthorizationHeaders();
+
 export const cancelByIds = (uploadIds: string[]): Promise<any> =>
   TusNative.cancelByIds(uploadIds);
 

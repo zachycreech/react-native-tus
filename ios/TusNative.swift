@@ -111,6 +111,12 @@ class TusNative: RCTEventEmitter {
         resolve(NSNull())
     }
 
+    @objc(updateAuthorizationHeaders:rejecter:)
+    func updateAuthorizationHeaders(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
+        tusClient.updateAuthorizationHeaders()
+        resolve(NSNull())
+    }
+
     @objc(freeMemory:rejecter:)
     func freeMemory(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) -> Void {
         tusClient.freeMemory()
